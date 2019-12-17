@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+# mybatis 基本配置
+mybatis:
+  mapper-locations: classpath:mybatis/*.xml
+  type-aliases-package: com.suixingpay.pojo
+  configuration:
+    map-underscore-to-camel-case: true
+
+# 分页配置
+pagehelper:
+  helperDialect: mysql
+  reasonable: true
+  supportMethodsArguments: true
+  params: count=countSql
+
+spring:
+  profiles:
+    active: dev
+
+  # MySQL 配置 - 暂时未建库
+  datasource:
+    platform: mysql
+    url: jdbc:mysql://172.16.41.67:3306/seckill_zwl?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: team3member
+    password: team3team3
+    driver-class-name: com.mysql.jdbc.Driver
