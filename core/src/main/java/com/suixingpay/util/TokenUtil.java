@@ -41,7 +41,7 @@ public class TokenUtil {
      * @Author: luyun
      * @Date: 2019/12/18 11:50
      */
-    public static  String creatToken(String userId,String userName,String userLevel) throws  Exception {
+    public static  String creatToken(String user) throws  Exception {
         try {
 
             //过期时间
@@ -58,9 +58,7 @@ public class TokenUtil {
 
             //build token
             return JWT.create().withHeader(header)
-                    .withClaim("userId", userId)
-                    .withClaim("userName", userName)
-                    .withClaim("userLevel", userLevel)
+                    .withClaim("user", user)
                     .withClaim("createTime",new Date().getTime())
                     .withExpiresAt(expireTime)
                     .sign(algorithm);
