@@ -89,10 +89,10 @@
             <if test="status != null">
                 status,
             </if>
-            <if test="create_user_id != null">
+            <if test="createUserId != null">
                 create_user_id,
             </if>
-            <if test="create_time != null">
+            <if test="createTime != null">
                 create_time,
             </if>
         </trim>
@@ -139,11 +139,11 @@
             <if test="status != null">
                 #{status,jdbcType=INTEGER},
             </if>
-            <if test="create_user_id != null">
-                #{create_user_id,jdbcType=INTEGER},
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=INTEGER},
             </if>
-            <if test="create_time != null">
-                #{create_time,jdbcType=TIMESTAMP},
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
             </if>
         </trim>
     </insert>

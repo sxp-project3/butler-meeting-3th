@@ -30,6 +30,7 @@ public class MeetingController {
     public Response end(@RequestBody Meeting meeting) {
         //报名开始时间
         Date signUpStartTime= meeting.getSignUpStartTime();
+        System.out.println(new Date());
         long miao= signUpStartTime.getTime();
        //报名截止时间
         Date signUpEndTime=meeting.getSignUpEndTime();
@@ -54,7 +55,7 @@ public class MeetingController {
         if(signUpStartTime.after(startTime)){
             return Response.getInstance(CodeEnum.FAIL,"会议报名开始时间选择不正确！");
         }
-        if((signUpEndTime.after(startTime)&&signUpEndTime.after(signUpStartTime))){
+        if((signUpEndTime.after(startTime)&&signUpEndTime.before(signUpStartTime))){
             return Response.getInstance(CodeEnum.FAIL,"会议报名截止时间选择不正确！");
         }
         if(startTime.before(new Date())){
