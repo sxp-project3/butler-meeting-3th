@@ -27,7 +27,7 @@ public class MeetingController {
 
 
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Response end(@RequestBody @Validated  Meeting meeting) {
+    public Response end(@RequestBody Meeting meeting) {
         //报名开始时间
         Date signUpStartTime= meeting.getSignUpStartTime();
         long miao= signUpStartTime.getTime();
