@@ -1,3 +1,4 @@
 rootProject.name = 'butler-meeting-3th'
 include 'core'
+include 'butler-mine'
 
