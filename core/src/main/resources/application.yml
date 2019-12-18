@@ -19,10 +19,10 @@ spring:
   profiles:
     active: dev
 
-  # MySQL 配置 - 暂时未建库
+  # MySQL 配置
   datasource:
     platform: mysql
-    url: jdbc:mysql://172.16.41.67:3306/seckill_zwl?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    url: jdbc:mysql://172.16.41.67:3306/butler_zwl?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: team3member
     password: team3team3
     driver-class-name: com.mysql.jdbc.Driver
