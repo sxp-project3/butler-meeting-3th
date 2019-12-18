@@ -39,9 +39,9 @@ public class Meeting {
     //会议当前状态
     private Integer status;
     //建立会议用户id
-    private Integer create_user_id;
+    private Integer createUserId;
     //建立会议时间
-    private Date create_time;
+    private Date createTime;
 
     public Meeting() {
     }
@@ -166,19 +166,19 @@ public class Meeting {
         this.status = status;
     }
 
-    public Integer getCreate_user_id() {
-        return create_user_id;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setCreate_user_id(Integer create_user_id) {
-        this.create_user_id = create_user_id;
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
-    public Date getCreate_time() {
-        return create_time;
+    public Date getCreateTime() {
+        return createTime;
     }
 
-    public void setCreate_time(Date create_time) {
-        this.create_time = create_time;
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }
