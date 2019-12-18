@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suixingpay.mapper.MeetingMapper">
+
+    <!--数据库字段集合 - SQL 查询字段-->
+    <sql id="Active_Column_List">
+        id
+        ,
+        type,
+        if_fee,
+        name,
+        host,
+        sign_up_starttime,
+        sign_up_endtime,
+        start_time,
+        end_time,
+        duration,
+        place,
+        detail_address,
+        description,
+        status,
+        create_user_id,
+        create_time
+    </sql>
+
+    <!--    动态SQL ：模糊插入一条会议，对应新建会议功能 -->
+    <insert id="insertMeeting" parameterType="com.suixingpay.pojo.Meeting">
+        insert into meeting
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="type != null and type !=''">
+                type,
+            </if>
+            <if test="ifFee != null">
+                if_fee,
+            </if>
+            <if test="name != null and name !=''">
+                name,
+            </if>
+            <if test="host != null and host !=''">
+                host,
+            </if>
+            <if test="signUpStartTime != null">
+                sign_up_starttime,
+            </if>
+            <if test="signUpEndTime != null">
+                sign_up_endtime,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="endTime != null">
+                end_time,
+            </if>
+            <if test="durationMiao != null">
+                duration,
+            </if>
+            <if test="place != null and place !=''">
+                place,
+            </if>
+            <if test="detailAddress != null and detailAddress !=''">
+                detail_address,
+            </if>
+            <if test="description != null and description !=''">
+                description,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="create_user_id != null">
+                create_user_id,
+            </if>
+            <if test="create_time != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="type != null and type !=''">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="ifFee != null">
+                #{ifFee,jdbcType=INTEGER},
+            </if>
+            <if test="name != null and name !=''">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null and host !=''">
+                #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="signUpStartTime != null">
+                #{signUpStartTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="signUpEndTime != null">
+                #{signUpEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="durationMiao != null">
+                #{durationMiao,jdbcType=INTEGER},
+            </if>
+            <if test="place != null and place !=''">
+                #{place,jdbcType=VARCHAR},
+            </if>
+            <if test="detailAddress != null and detailAddress !=''">
+                #{detailAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null and description !=''">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="create_user_id != null">
+                #{create_user_id,jdbcType=INTEGER},
+            </if>
+            <if test="create_time != null">
+                #{create_time,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+
+</mapper>
