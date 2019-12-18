@@ -31,7 +31,7 @@ public class TokenUtil {
     public  static  final  int calendarInterval=10;
 
     @Autowired
-    HttpServletRequest httpServletRequest;
+    public static HttpServletRequest httpServletRequest;
 
     /**
      * 功能描述: <JWT 生成token>
@@ -43,7 +43,7 @@ public class TokenUtil {
      */
     public static  String creatToken(String userId,String userName,String userLevel) throws  Exception {
         try {
-            Date iaDate = new Date();
+
             //过期时间
             Calendar nowTime = Calendar.getInstance();
             nowTime.add(calendarFiled, calendarInterval);
@@ -61,6 +61,7 @@ public class TokenUtil {
                     .withClaim("userId", userId)
                     .withClaim("userName", userName)
                     .withClaim("userLevel", userLevel)
+                    .withClaim("createTime",new Date().getTime())
                     .withExpiresAt(expireTime)
                     .sign(algorithm);
         } catch (Exception e){
@@ -95,8 +96,8 @@ public class TokenUtil {
      * @Date: 2019/12/18 12:00
      */
     public static int getId(String token){
-        Map<String,Claim> claimMap=new HashMap<>();
-        Claim userId=claimMap.get("userId");
+        Map<String,Claim> claimMap=verifyToken(token);
+        Claim userId = claimMap.get("user_id");
         if (Utils.isBlank(String.valueOf(userId))){
             new RuntimeException("token异常 重新登录");
         }
