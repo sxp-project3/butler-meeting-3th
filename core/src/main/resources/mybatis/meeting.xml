@@ -2,6 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.suixingpay.mapper.MeetingMapper">
 
+    <resultMap id="BaseResultMap" type="com.suixingpay.pojo.Meeting">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="if_fee" jdbcType="INTEGER" property="ifFee" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="host" jdbcType="VARCHAR" property="host" />
+        <result column="sign_up_start_time" jdbcType="TIMESTAMP" property="signUpStartTime" />
+        <result column="sign_up_end_time" jdbcType="TIMESTAMP" property="signUpEndTime" />
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="duration" jdbcType="INTEGER" property="durationMiao" />
+        <result column="place" jdbcType="VARCHAR" property="place" />
+        <result column="detail_address" jdbcType="VARCHAR" property="detailAddress" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
     <!--数据库字段集合 - SQL 查询字段-->
     <sql id="Active_Column_List">
         id
@@ -127,6 +147,13 @@
             </if>
         </trim>
     </insert>
+
+    <select id="getListForFrontShow" resultMap="BaseResultMap">
+        select
+        <include refid="Active_Column_List"/>
+        from meeting
+        where signUpStartTime &lt; #{nowDate, jdbcType=TIMESTAMP} and signUpEndTime &gt; #{nowDate, jdbcType=TIMESTAMP}
+    </select>
 
 
 </mapper>

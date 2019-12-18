@@ -34,4 +34,9 @@ dependencies {
 //    数据库分页
     compile group: 'com.github.pagehelper', name: 'pagehelper-spring-boot-starter', version: '1.2.3'
 
+//    token  JWT
+    compile 'com.auth0:java-jwt:3.4.0'
+
+
+
 }
