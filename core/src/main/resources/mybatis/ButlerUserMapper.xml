@@ -33,4 +33,8 @@
     and password = #{password}
   </select>
 
+  <select id="selectParentInfoByid" resultType="com.suixingpay.pojo.ButlerUser">
+
+
+  </select>
 </mapper>

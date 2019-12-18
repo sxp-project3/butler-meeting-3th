@@ -14,10 +14,7 @@
     id, user_id, subordinates_id, create_time, update_time, is_delete
     </sql>
     
-    <select id="selectParentInfoByid" resultMap="BaseResultMap" parameterType="com.suixingpay.pojo.ButlerUser">
-    select user_id,
 
-    </select>
 
 
 

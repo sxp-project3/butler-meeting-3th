@@ -43,12 +43,13 @@ public class TokenUtil {
      * @Date: 2019/12/18 11:50
      */
     public static  String creatToken(ButlerUser user) throws  RuntimeException {
-
+        String msg="user为空";
         try {
-            Integer userId=user.getId();
-            String  userName=user.getName();
+
+            Integer id=user.getId();
+            String  name=user.getName();
             String  userLevel=user.getLevelNum();
-            String tele=user.getTelephone();
+            String telephone=user.getTelephone();
             String account=user.getAccount();
             String password=user.getPassword();
             String rootUserId=user.getRootUserId();
@@ -76,27 +77,27 @@ public class TokenUtil {
 
             //build token
             return JWT.create().withHeader(header)
-                    .withClaim("userId", userId)
-                    .withClaim("userName", userName)
+                    .withClaim("id", id)
+                    .withClaim("name", name)
                     .withClaim("userLevel", userLevel)
-                    .withClaim("createTime",createTime)
-                    .withClaim("tele",tele)
+                    .withClaim("create_time",createTime)
+                    .withClaim("telephone",telephone)
                     .withClaim("account",account)
                     .withClaim("password",password)
-                    .withClaim("rootUserId",rootUserId)
-                    .withClaim("leaderId",leaderId)
-                    .withClaim("referralCode",referralCode)
+                    .withClaim("root_user_id",rootUserId)
+                    .withClaim("leader_id",leaderId)
+                    .withClaim("referral_code",referralCode)
                     .withClaim("province",province)
                     .withClaim("city",city)
                     .withClaim("role",role)
-                    .withClaim("updateTime",updateTime)
-                    .withClaim("isDelete",isDelete)
+                    .withClaim("update_time",updateTime)
+                    .withClaim("is_delete",isDelete)
                     .withExpiresAt(expireTime)
                     .sign(algorithm);
         } catch (Exception e){
-            e.printStackTrace();
+            return msg;
         }
-        return  null;
+
     }
     /**
      * 功能描述: <解密token>
