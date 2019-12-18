@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.suixingpay.pojo.ButlerUser;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,8 +42,61 @@ public class TokenUtil {
      * @Author: luyun
      * @Date: 2019/12/18 11:50
      */
-    public static  String creatToken(String user) throws  Exception {
+    public static  String creatToken(ButlerUser user) throws  Exception {
+        // private Integer id;
+        //
+        //    private String name;
+        //
+        //    private String telephone;
+        //
+        //    @NotBlank(message = "用户账户不可为空！")
+        //    @Size(min = 0, max = 16, message = "用户账户的长度不可大于 16 个字符！")
+        //    private String account;
+        //
+        //    @NotBlank(message = "用户密码不可为空！")
+        //    @Size(min = 0, max = 32, message = "用户密码的长度不可大于 32 个字符！")
+        //    private String password;
+        //
+        //    private String rootUserId;
+        //
+        //    private String leaderId;
+        //
+        //    private String referralCode;
+        //
+        //    private String levelNum;
+        //
+        //    private String province;
+        //
+        //    private String city;
+        //
+        //    private String role;
+        //
+        //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+        //    private Date createTime;
+        //
+        //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+        //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+        //    private Date updateTime;
+        //
+        //    private String isDelete;
         try {
+            Integer userId=user.getId();
+            String  userName=user.getName();
+            String  userLevel=user.getLevelNum();
+            String tele=user.getTelephone();
+            String account=user.getAccount();
+            String password=user.getPassword();
+            String rootUserId=user.getRootUserId();
+            String leaderId=user.getLeaderId();
+            String referralCode=user.getReferralCode();
+            String province=user.getProvince();
+            String city=user.getCity();
+            String role=user.getRole();
+            Date createTime=user.getCreateTime();
+            Date updateTime=user.getUpdateTime();
+            String isDelete=user.getIsDelete();
+
 
             //过期时间
             Calendar nowTime = Calendar.getInstance();
@@ -58,8 +112,21 @@ public class TokenUtil {
 
             //build token
             return JWT.create().withHeader(header)
-                    .withClaim("user", user)
-                    .withClaim("createTime",new Date().getTime())
+                    .withClaim("userId", userId)
+                    .withClaim("userName", userName)
+                    .withClaim("userLevel", userLevel)
+                    .withClaim("createTime",createTime)
+                    .withClaim("tele",tele)
+                    .withClaim("account",account)
+                    .withClaim("password",password)
+                    .withClaim("rootUserId",rootUserId)
+                    .withClaim("leaderId",leaderId)
+                    .withClaim("referralCode",referralCode)
+                    .withClaim("province",province)
+                    .withClaim("city",city)
+                    .withClaim("role",role)
+                    .withClaim("updateTime",updateTime)
+                    .withClaim("isDelete",isDelete)
                     .withExpiresAt(expireTime)
                     .sign(algorithm);
         } catch (Exception e){
