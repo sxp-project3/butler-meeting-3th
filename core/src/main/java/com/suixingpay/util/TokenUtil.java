@@ -42,44 +42,8 @@ public class TokenUtil {
      * @Author: luyun
      * @Date: 2019/12/18 11:50
      */
-    public static  String creatToken(ButlerUser user) throws  Exception {
-        // private Integer id;
-        //
-        //    private String name;
-        //
-        //    private String telephone;
-        //
-        //    @NotBlank(message = "用户账户不可为空！")
-        //    @Size(min = 0, max = 16, message = "用户账户的长度不可大于 16 个字符！")
-        //    private String account;
-        //
-        //    @NotBlank(message = "用户密码不可为空！")
-        //    @Size(min = 0, max = 32, message = "用户密码的长度不可大于 32 个字符！")
-        //    private String password;
-        //
-        //    private String rootUserId;
-        //
-        //    private String leaderId;
-        //
-        //    private String referralCode;
-        //
-        //    private String levelNum;
-        //
-        //    private String province;
-        //
-        //    private String city;
-        //
-        //    private String role;
-        //
-        //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-        //    private Date createTime;
-        //
-        //    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-        //    private Date updateTime;
-        //
-        //    private String isDelete;
+    public static  String creatToken(ButlerUser user) throws  RuntimeException {
+
         try {
             Integer userId=user.getId();
             String  userName=user.getName();
