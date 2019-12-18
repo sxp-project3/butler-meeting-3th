@@ -32,7 +32,7 @@ public class MeetingController {
         //会议结束时间
         //Date endTime=meeting.getEndTime();
         //会议创建时间
-        Date createTime=meeting.getCreate_time();
+        Date createTime=meeting.getCreateTime();
         //当前时间
         Date nowTime =new Date();
 
