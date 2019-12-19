@@ -29,4 +29,20 @@ public class MeetingServiceImpl implements MeetingService {
 
 
     }
+    /**
+     * 根据会议id修改会议信息
+     *
+     * @param Meeting 会议实体
+     * @return
+     */
+    @Override
+    public Integer updateMeetingById(Meeting Meeting) {
+        Integer result = meetingMapper.updateMeetingById(Meeting);
+        if (result >= 1) {
+            return 1;
+        }
+        return 0;
+
+
+    }
 }

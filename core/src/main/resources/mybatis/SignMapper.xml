@@ -134,13 +134,13 @@ insert into sign (user_id, meeting_id, signup_time, is_signup) VALUES (#{userId,
 insert into sign (user_id, meeting_id, signin_time, is_signin) values (#{userId,jdbcType=INTEGER}, #{meetingId,jdbcType=INTEGER}, #{signinTime,jdbcType=TIMESTAMP}, #{isSignin,jdbcType=INTEGER});
   </insert>
 
-    <select id="selectCountSignIn" parameterType="Integer" resultType="Integer">
+    <select id="selectCountSignIn" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         select count(*)
         from sign
         where meeting_id=#{meetingId} and is_signin=1;
     </select>
 
-    <select id="selectCountSignUp" parameterType="Integer" resultType="Integer">
+    <select id="selectCountSignUp" parameterType="java.lang.Integer" resultType="java.lang.Integer">
         select count(*)
         from sign
         where meeting_id=#{meetingId} and is_signup=1;
