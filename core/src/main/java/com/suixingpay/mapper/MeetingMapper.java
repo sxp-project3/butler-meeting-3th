@@ -3,10 +3,12 @@ package com.suixingpay.mapper;
 import com.suixingpay.pojo.Meeting;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.jute.compiler.JString;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangleying
@@ -24,4 +26,8 @@ public interface MeetingMapper {
 //    @Param("mapParams") HashMap mapParams);
 
     Meeting selectOneById(@Param("meetingId") Integer meetingId);
+
+    List<Meeting> getMyCreateList(@Param("userId") Integer userId);
+
+    List<Meeting> paramSearchList(@Param("params") Map<String, Object> params);
 }

@@ -167,4 +167,30 @@
         from meeting where id=#{meetingId}
     </select>
 
+    <select id="getMyCreateList" resultMap="BaseResultMap">
+        select
+        <include refid="Active_Column_List"/>
+        from meeting
+        where create_user_id=#{userId};
+    </select>
+
+<!--    ${params.nickname}这种写法参数默认是传字符串，-->
+<!--    #{params.accountId}可以取Long，Integer之类的。-->
+    <select id="paramSearchList" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Active_Column_List"/>
+        from meeting
+        where 1=1
+        <if test="params.createUserId!=null and params.createUserId!=''">
+            and create_user_id=#{params.createUserId}
+        </if>
+        <if test="params.ifFee!=null and params.ifFee!=''">
+            and if_fee=#{params.ifFee}
+        </if>
+        <if test="params.place!=null and params.place!=''">
+            and place like concat('%', #{params.place}, '%')
+        </if>
+
+    </select>
+
 </mapper>

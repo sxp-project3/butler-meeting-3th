@@ -1,6 +1,8 @@
 package com.suixingpay.pojo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
@@ -27,15 +29,23 @@ public class Meeting {
     @NotBlank(message = "主办方为空！")
     private String host;
     //报名开始时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @NotNull(message = "报名开始时间为空！")
     private Date signUpStartTime;
     //报名截止时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @NotNull(message = "报名截止时间为空！")
     private Date signUpEndTime;
     //会议开始时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @NotNull(message = "会议开始时间为空！")
     private Date startTime;
     //会议结束时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endTime;
     //会议时长（小时）
     @DecimalMin("0")
@@ -56,6 +66,8 @@ public class Meeting {
     //建立会议用户id
     private Integer createUserId;
     //建立会议时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     public Meeting() {
