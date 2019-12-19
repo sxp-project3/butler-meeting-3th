@@ -48,7 +48,7 @@ public class MeetingKjServiceImpl implements MeetingKjService {
     public List<Meeting>  searchMeeting(SearchMeetingParamVo searchMeetingParamVo) {
 
         // Map<String,Object> params = new HashMap<>();
-        log.info("ifFee"+searchMeetingParamVo.getIfFee().toString());
+        // log.info("ifFee"+searchMeetingParamVo.getIfFee());
         // if (!searchMeetingParamVo.getUserPromoteCode().isEmpty()) {
             // 这里需要转换管家推荐码为用户id，尚未完成
         // }
