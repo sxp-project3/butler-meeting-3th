@@ -25,44 +25,45 @@ public class MeetingController {
     private MeetingService meetingService;
 
 
-
     @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public Response end(@RequestBody Meeting meeting) {
+    public Response end(@RequestBody @Validated Meeting meeting) {
         //报名开始时间
-        Date signUpStartTime= meeting.getSignUpStartTime();
-        System.out.println(new Date());
-        long miao= signUpStartTime.getTime();
-       //报名截止时间
-        Date signUpEndTime=meeting.getSignUpEndTime();
+        Date signUpStartTime = meeting.getSignUpStartTime();
+        //报名截止时间
+        Date signUpEndTime = meeting.getSignUpEndTime();
         //会议开始时间
-        Date startTime=meeting.getStartTime();
+        Date startTime = meeting.getStartTime();
+        long startTimeHaoMiao = startTime.getTime();
         //前台获取会议时长，小时
-        double durationShi=meeting.getDurationShi();
+        double durationShi = meeting.getDurationShi();
         //将小时转为毫秒数
-        double durationMiao =durationShi*60*60;
-        Integer durationMiao1=(int)durationMiao;
+        Integer durationHaoMiao = (int) (durationShi * 60 * 60 * 1000);
+        //将小时转为秒数
+        Integer durationMiao = (int) (durationShi * 60 * 60);
         //会议结束时间毫秒数
-        double endTimeMiao= (long)miao+durationMiao;
-        long endTimeMiao1 = new Double(endTimeMiao).longValue();
+        long endTimeMiao = startTimeHaoMiao + durationHaoMiao.longValue();
         //会议创建时间
-        meeting.setCreateTime(meeting.getCreateTime());
+        meeting.setCreateTime(new Date());
         //前台获取会议时长，秒
-        meeting.setDurationMiao(durationMiao1);
+        meeting.setDurationMiao(durationMiao);
         //会议结束时间
-        meeting.setEndTime(new Date(endTimeMiao1));
+        meeting.setEndTime(new Date(endTimeMiao));
         //假的用户id
         meeting.setCreateUserId(1);
-        if(signUpStartTime.after(startTime)){
-            return Response.getInstance(CodeEnum.FAIL,"会议报名开始时间选择不正确！");
+        if (signUpStartTime.after(startTime)) {
+            return Response.getInstance(CodeEnum.FAIL, "会议报名开始时间选择不正确！");
         }
-        if((signUpEndTime.after(startTime)&&signUpEndTime.before(signUpStartTime))){
-            return Response.getInstance(CodeEnum.FAIL,"会议报名截止时间选择不正确！");
+        if ((signUpEndTime.after(startTime) || signUpEndTime.before(signUpStartTime))) {
+            return Response.getInstance(CodeEnum.FAIL, "会议报名截止时间选择不正确！");
         }
-        if(startTime.before(new Date())){
-            return Response.getInstance(CodeEnum.FAIL,"会议开始时间选择不正确！");
+        if (startTime.before(new Date())) {
+            return Response.getInstance(CodeEnum.FAIL, "会议开始时间选择不正确！");
         }
-        meetingService.addMeeting(meeting);
-        return Response.getInstance(CodeEnum.SUCCESS);
+        Integer result = meetingService.addMeeting(meeting);
+        if (result == 1) {
+            return Response.getInstance(CodeEnum.SUCCESS);
+        }
+        return Response.getInstance(CodeEnum.FAIL);
     }
 
 }

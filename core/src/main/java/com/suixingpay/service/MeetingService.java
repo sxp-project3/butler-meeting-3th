@@ -8,5 +8,6 @@ import com.suixingpay.pojo.Meeting;
  * @date 2019/12/18 15:36
  */
 public interface MeetingService {
-    void addMeeting(Meeting Meeting);
+    //插入一条会议，对应新建会议功能
+    Integer addMeeting(Meeting Meeting);
 }

@@ -17,14 +17,16 @@ public class MeetingServiceImpl implements MeetingService {
     @Autowired
     private MeetingMapper meetingMapper;
 
-    @Override
-    public void addMeeting(Meeting Meeting) {
-        try {
-            Integer result = meetingMapper.insertMeeting(Meeting);
-        } catch (Exception e) {
-            e.printStackTrace();
 
+    //插入一条会议，对应新建会议功能
+    @Override
+    public Integer addMeeting(Meeting Meeting) {
+        Integer result = meetingMapper.insertMeeting(Meeting);
+        if (result >= 1) {
+            return 1;
         }
+        return 0;
+
 
     }
 }
