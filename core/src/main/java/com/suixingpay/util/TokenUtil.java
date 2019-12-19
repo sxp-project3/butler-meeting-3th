@@ -62,11 +62,6 @@ public class TokenUtil {
             Date updateTime=user.getUpdateTime();
             String isDelete=user.getIsDelete();
 
-
-            //过期时间
-            Calendar nowTime = Calendar.getInstance();
-            nowTime.add(calendarFiled, calendarInterval);
-            Date expireTime = nowTime.getTime();
             //私钥加密
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
 
@@ -92,7 +87,6 @@ public class TokenUtil {
                     .withClaim("role",role)
                     .withClaim("update_time",updateTime)
                     .withClaim("is_delete",isDelete)
-                    .withExpiresAt(expireTime)
                     .sign(algorithm);
         } catch (Exception e){
             return msg;

@@ -1,5 +1,7 @@
 package com.suixingpay.mapper;
 
+import com.suixingpay.pojo.ButlerSubordinates;
+import com.suixingpay.pojo.ButlerUser;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,6 +13,16 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ButlerSubordinatesMapper {
+    /**
+     * 功能描述: <根据用户id查询所有父级信息>
+     * 〈〉
+     * @Param: [id]
+     * @Return: java.lang.Integer
+     * @Author: luyun
+     * @Date: 2019/12/18 17:52
+     */
+    Integer selectUserIdBySubId(Integer id);
 
+    ButlerSubordinates selectParentInfoByid(Integer id);
 
 }
