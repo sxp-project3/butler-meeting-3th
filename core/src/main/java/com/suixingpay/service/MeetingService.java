@@ -10,4 +10,6 @@ import com.suixingpay.pojo.Meeting;
 public interface MeetingService {
     //插入一条会议，对应新建会议功能
     Integer addMeeting(Meeting Meeting);
+    //根据会议id修改会议信息
+    Integer updateMeetingById(Meeting Meeting);
 }
