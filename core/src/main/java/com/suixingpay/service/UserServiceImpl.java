@@ -99,18 +99,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public ButlerUserVO parseUser(String token) {
 
-        // 通过 token 解析用户信息
-        Map<String, Object> map = TokenUtil.verifyToken(token);
-
-        ButlerUserVO butlerUserVO = null;
-
-        try {
-            butlerUserVO = (ButlerUserVO) JacksonUtil.mapToBean(map, ButlerUserVO.class);
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (token == null) {
+            return new ButlerUserVO();
         }
 
-        return butlerUserVO;
+        // 通过 token 解析用户信息
+        return TokenUtil.verifyToken(token);
+        
     }
 
     @Override
