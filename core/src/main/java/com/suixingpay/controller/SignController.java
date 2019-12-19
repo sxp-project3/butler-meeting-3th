@@ -1,9 +1,11 @@
 package com.suixingpay.controller;
 
 import com.suixingpay.enumeration.CodeEnum;
+import com.suixingpay.pojo.ButlerUser;
 import com.suixingpay.pojo.Meeting;
 import com.suixingpay.pojo.Sign;
 import com.suixingpay.response.Response;
+import com.suixingpay.service.ButlerSubordinatesServcie;
 import com.suixingpay.service.MeetingKjService;
 import com.suixingpay.service.SignService;
 
@@ -30,8 +32,12 @@ public class SignController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SignController.class);
     @Autowired
     private SignService signService;
+
     @Autowired
     private MeetingKjService meetingKjService;
+
+    @Autowired
+    private ButlerSubordinatesServcie butlerSubordinatesServcie;
 
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public Response signUpActive(@RequestBody Sign sign) {
@@ -154,7 +160,6 @@ public class SignController {
             sign.setMeetingId(meetingId);
             sign.setSigninTime(date);
             sign.setIsSignin(1);
-
             LOGGER.info("未报名的签到");
             signService.insertSignIn(sign);
 
@@ -184,6 +189,18 @@ public class SignController {
         //定义一个Map用于装结果
         Map<String, Object> map = new HashMap<>();
 
+        //接收用户id的参数判空
+        if (userId == null){
+            LOGGER.info("没有接收到用户id");
+            return Response.getInstance(CodeEnum.FAIL,"没有接收到用户id");
+        }
+
+        //接收会议id的参数判空
+        if (meetingId == null){
+            LOGGER.info("没有接收到会议id");
+            return Response.getInstance(CodeEnum.FAIL,"没有接收到会议id");
+        }
+
         //通过会议id查询会议信息
         Meeting meeting = meetingKjService.getOne(meetingId);
 
@@ -192,13 +209,13 @@ public class SignController {
             LOGGER.info("不存在的会议");
             return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
         }
-
         map.put("Province", meeting.getPlaceCity());
         map.put("city", meeting.getPlaceCounty());
 
         //通过用户id查询报名信息
         Sign sign1 = signService.selectWithOutIdAndUserId(sign);
 
+        //判断是否存在数据
         if (sign1 == null){
             LOGGER.info("不存在此报名信息");
             return Response.getInstance(CodeEnum.FAIL,"不存在此报名信息");
@@ -207,6 +224,18 @@ public class SignController {
         String str = sdf.format(sign1.getSignupTime());
         map.put("SignUpTime", str);
         map.put("IsSignIn", sign1.getIsSignin());
+
+        //通过用户id查询用户信息
+        ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(userId);
+
+        //判断是否存在数据
+        if (butlerUser == null){
+            LOGGER.info("不存在该用户信息");
+            return Response.getInstance(CodeEnum.FAIL,"不存在该用户信息");
+        }
+        map.put("Code", butlerUser.getReferralCode());
+        map.put("userName", butlerUser.getName());
+        map.put("telePhone", butlerUser.getTelephone());
 
 
         return Response.getInstance(CodeEnum.SUCCESS, map);
@@ -235,6 +264,5 @@ public class SignController {
 //        return Response.getInstance(CodeEnum.SUCCESS,"查询成功");
 //
 //    }
-
 
 }
