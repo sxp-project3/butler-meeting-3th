@@ -1,6 +1,6 @@
 package com.suixingpay.service;
 
-import com.suixingpay.pojo.ButlerSubordinates;
+import com.suixingpay.pojo.ButlerUser;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public interface ButlerSubordinatesServcie {
      * @Author: luyun
      * @Date: 2019/12/19 13:32
      */
-    List<ButlerSubordinates> selectParentInfoBySubId(Integer id);
+    List<ButlerUser> selectParentInfoBySubId(Integer id);
     /**
      * 功能描述: <根据用户id查询直接父级的信息>
      * 〈〉
@@ -32,6 +32,6 @@ public interface ButlerSubordinatesServcie {
      * @Author: luyun
      * @Date: 2019/12/19 10:07
      */
-    ButlerSubordinates selectParentInfoByid(Integer id);
+    ButlerUser selectParentInfoByid(int id);
 
 }
