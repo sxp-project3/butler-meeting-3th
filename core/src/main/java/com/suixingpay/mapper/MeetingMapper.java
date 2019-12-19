@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -18,5 +19,7 @@ public interface MeetingMapper {
     Integer insertMeeting(Meeting meeting);
 
     // 获取我的可报名的会议
-    List<Meeting> getListForFrontShow(@Param("nowDate") Date nowDate);
+    List<Meeting> getListForFrontShow(@Param("nowDate") Date nowDate,
+                                      @Param("createUserIds") List<Integer> createUserIds);
+//    @Param("mapParams") HashMap mapParams);
 }

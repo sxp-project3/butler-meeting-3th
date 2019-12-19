@@ -8,8 +8,8 @@
         <result column="if_fee" jdbcType="INTEGER" property="ifFee" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="host" jdbcType="VARCHAR" property="host" />
-        <result column="sign_up_start_time" jdbcType="TIMESTAMP" property="signUpStartTime" />
-        <result column="sign_up_end_time" jdbcType="TIMESTAMP" property="signUpEndTime" />
+        <result column="sign_up_starttime" jdbcType="TIMESTAMP" property="signUpStartTime" />
+        <result column="sign_up_endtime" jdbcType="TIMESTAMP" property="signUpEndTime" />
         <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
         <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
         <result column="type" jdbcType="VARCHAR" property="type" />
@@ -152,7 +152,13 @@
         select
         <include refid="Active_Column_List"/>
         from meeting
-        where signUpStartTime &lt; #{nowDate, jdbcType=TIMESTAMP} and signUpEndTime &gt; #{nowDate, jdbcType=TIMESTAMP}
+        where sign_up_starttime &lt; #{nowDate} and sign_up_endtime &gt; #{nowDate}
+        <if test="createUserIds != null">
+            and create_user_id in
+            <foreach collection="createUserIds" item="userId" open="(" close=")" separator=",">
+                #{userId}
+            </foreach>
+        </if>
     </select>
 
 
