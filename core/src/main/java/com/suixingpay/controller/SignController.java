@@ -31,7 +31,6 @@ public class SignController {
     @RequestMapping(value = "/signup",method = RequestMethod.POST)
     public Response signUpActive(@RequestBody Sign sign){
 
-        Date date = new Date();
 
         //接参
         LOGGER.info("接收的参数为[{},{}]",sign.getUserId(),sign.getMeetingId());
@@ -88,7 +87,6 @@ public class SignController {
     @RequestMapping(value = "/signin",method = RequestMethod.POST)
     public Response selectIdByMeeting(@RequestBody Sign sign){
 
-        Date date = new Date();
 
         //接参
         LOGGER.info("接收的参数为[{},{}]",sign.getUserId(),sign.getMeetingId());
