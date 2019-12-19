@@ -58,10 +58,11 @@ public class TokenUtil {
             String province=user.getProvince();
             String city=user.getCity();
             String role=user.getRole();
-            Date createTime=user.getCreateTime();
-            Date updateTime=user.getUpdateTime();
+            Date sReateTime=user.getCreateTime();
+            Date sUpdateTime=user.getUpdateTime();
             String isDelete=user.getIsDelete();
-
+            String createTime=String.valueOf(sReateTime);
+            String updateTime=String.valueOf(sUpdateTime);
             //私钥加密
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
 
