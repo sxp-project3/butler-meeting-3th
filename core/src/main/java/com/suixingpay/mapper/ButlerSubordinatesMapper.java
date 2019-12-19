@@ -1,8 +1,8 @@
 package com.suixingpay.mapper;
 
-import com.suixingpay.pojo.ButlerSubordinates;
 import com.suixingpay.pojo.ButlerUser;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public interface ButlerSubordinatesMapper {
      * @Author: luyun
      * @Date: 2019/12/18 17:52
      */
-    Integer selectUserIdBySubId(Integer id);
+    Integer selectUserIdBySubId(@Param("id") Integer id);
     /**
      * 功能描述: <根据id查询直接父类id>
      * 〈〉
@@ -32,7 +32,7 @@ public interface ButlerSubordinatesMapper {
      * @Author: luyun
      * @Date: 2019/12/19 11:06
      */
-    ButlerSubordinates selectParentInfoByid(Integer id);
+    ButlerUser selectParentInfoByid(Integer id);
     /**
      * 功能描述: <根据id获取父类id>
      * 〈〉
@@ -50,5 +50,5 @@ public interface ButlerSubordinatesMapper {
      * @Author: luyun
      * @Date: 2019/12/19 13:33
      */
-    List<ButlerSubordinates> selectParentInfoBySubId(Integer id);
+    List<ButlerUser> selectParentInfoBySubId(Integer id);
 }

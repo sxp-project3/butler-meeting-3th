@@ -1,14 +1,12 @@
 package com.suixingpay.util;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.suixingpay.enumeration.CodeEnum;
 import com.suixingpay.handler.GlobalExceptionHandler;
 import com.suixingpay.pojo.ButlerUser;
-import com.suixingpay.response.Response;
 import com.suixingpay.vo.ButlerUserVO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -46,7 +44,6 @@ public class TokenUtil {
     public static  String creatToken(ButlerUser user) throws  RuntimeException {
         String msg="user为空";
         try {
-
             int id=user.getId();
             String  name=user.getName();
             String  levelNum=user.getLevelNum();
@@ -108,6 +105,7 @@ public class TokenUtil {
         try {
             JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(SECRET)).build();
              jwt=jwtVerifier.verify(token);
+             jwt.getClaims();
         }catch (Exception e){
             e.printStackTrace();
             throw  new RuntimeException("token值错误");

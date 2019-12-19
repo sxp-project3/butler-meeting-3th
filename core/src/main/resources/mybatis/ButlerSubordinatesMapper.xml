@@ -31,7 +31,7 @@
     id, user_id, subordinates_id, create_time, update_time, is_delete
     </sql>
     <sql id="Based_Column_List">
-    id,name,account,password,telephone,id_delete, is_delete, create_time, update_time, root_user_id,leader_id,
+    id,name,account,password,telephone,is_delete,create_time,update_time,root_user_id,leader_id,
     referral_code,level_num,province,city,role
     </sql>
     
@@ -42,12 +42,16 @@
         where 1 = 1
         and subordinates_id=#{id}
     </select>
-    <select id="selectParentInfoBySubId" resultType="com.suixingpay.pojo.ButlerSubordinates">
+    <select id="selectParentInfoBySubId" resultType="com.suixingpay.pojo.ButlerUser">
         select
-        <include refid="Based_Column_List"></include>
-        from butler_subordinates as b,butler_user as a
+        b.password,b.telephone,b.is_delete,b.create_time,b.update_time,b.root_user_id,b.leader_id,
+        b.referral_code,b.level_num,b.province,b.city,b.role
+        from butler_user as b,butler_subordinates as a
         where 1 = 1
-        and a.id=b.user_id and b.user_id=#{id}
+        and b.id=a.user_id and a.user_id in
+        <foreach close=")" collection="jobTypes" index="index" item="id" open="(" separator=" , ">
+            #{id}
+        </foreach>
     </select>
     <select id="selectLeaderByid" resultType="java.lang.Integer">
         select
@@ -56,7 +60,7 @@
         where  1=1
         and id=#{id}
     </select>
-    <select id="selectParentInfoByid" resultType="com.suixingpay.pojo.ButlerSubordinates">
+    <select id="selectParentInfoByid" resultType="com.suixingpay.pojo.ButlerUser">
         select
         <include refid="Based_Column_List"></include>
         from butler_user
