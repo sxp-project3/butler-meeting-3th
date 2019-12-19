@@ -1,17 +1,15 @@
 package com.suixingpay.util;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.suixingpay.handler.GlobalExceptionHandler;
+import com.suixingpay.pojo.ButlerUser;
+import com.suixingpay.vo.ButlerUserVO;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ClassName TokenUtil
@@ -31,8 +29,10 @@ public class TokenUtil {
     public  static  final  int calendarInterval=10;
 
     @Autowired
-    HttpServletRequest httpServletRequest;
+    public static HttpServletRequest httpServletRequest;
 
+    @Autowired
+    private static GlobalExceptionHandler globalExceptionHandler;
     /**
      * 功能描述: <JWT 生成token>
      * 〈〉
@@ -41,13 +41,26 @@ public class TokenUtil {
      * @Author: luyun
      * @Date: 2019/12/18 11:50
      */
-    public static  String creatToken(String userId,String userName,String userLevel) throws  Exception {
+    public static  String creatToken(ButlerUser user) throws  RuntimeException {
+        String msg="user为空";
         try {
-            Date iaDate = new Date();
-            //过期时间
-            Calendar nowTime = Calendar.getInstance();
-            nowTime.add(calendarFiled, calendarInterval);
-            Date expireTime = nowTime.getTime();
+            int id=user.getId();
+            String  name=user.getName();
+            String  levelNum=user.getLevelNum();
+            String telephone=user.getTelephone();
+            String account=user.getAccount();
+            String password=user.getPassword();
+            String rootUserId=user.getRootUserId();
+            String leaderId=user.getLeaderId();
+            String referralCode=user.getReferralCode();
+            String province=user.getProvince();
+            String city=user.getCity();
+            String role=user.getRole();
+            Date sReateTime=user.getCreateTime();
+            Date sUpdateTime=user.getUpdateTime();
+            String isDelete=user.getIsDelete();
+            String createTime=String.valueOf(sReateTime);
+            String updateTime=String.valueOf(sUpdateTime);
             //私钥加密
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
 
@@ -58,15 +71,26 @@ public class TokenUtil {
 
             //build token
             return JWT.create().withHeader(header)
-                    .withClaim("userId", userId)
-                    .withClaim("userName", userName)
-                    .withClaim("userLevel", userLevel)
-                    .withExpiresAt(expireTime)
+                    .withClaim("id", id)
+                    .withClaim("name", name)
+                    .withClaim("levelNum", levelNum)
+                    .withClaim("createTime",createTime)
+                    .withClaim("telephone",telephone)
+                    .withClaim("account",account)
+                    .withClaim("password",password)
+                    .withClaim("rootUserId",rootUserId)
+                    .withClaim("leaderId",leaderId)
+                    .withClaim("referralCode",referralCode)
+                    .withClaim("province",province)
+                    .withClaim("city",city)
+                    .withClaim("role",role)
+                    .withClaim("updateTime",updateTime)
+                    .withClaim("isDelete",isDelete)
                     .sign(algorithm);
         } catch (Exception e){
-            e.printStackTrace();
+            return msg;
         }
-        return  null;
+
     }
     /**
      * 功能描述: <解密token>
@@ -76,33 +100,53 @@ public class TokenUtil {
      * @Author: luyun
      * @Date: 2019/12/18 11:54
      */
-    public static Map<String, Claim> verifyToken(String token){
+    public static ButlerUserVO verifyToken(String token){
         DecodedJWT jwt=null;
         try {
             JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(SECRET)).build();
-            jwt=jwtVerifier.verify(token);
+             jwt=jwtVerifier.verify(token);
+             jwt.getClaims();
         }catch (Exception e){
             e.printStackTrace();
+            throw  new RuntimeException("token值错误");
         }
-        return jwt.getClaims();
+        Map<String, Object> map = new HashMap<>();
+        int id=jwt.getClaims().get("id").asInt();
+        String levelNum=jwt.getClaims().get("levelNum").asString();
+        String name=jwt.getClaims().get("name").asString();
+        String telephone=jwt.getClaims().get("telephone").asString();
+        String account=jwt.getClaims().get("account").asString();
+        String password=jwt.getClaims().get("password").asString();
+        String rootUserId=jwt.getClaims().get("rootUserId").asString();
+        String leaderId=jwt.getClaims().get("leaderId").asString();
+        String referralCode=jwt.getClaims().get("referralCode").asString();
+        String province=jwt.getClaims().get("province").asString();
+        String city=jwt.getClaims().get("city").asString();
+        String role=jwt.getClaims().get("role").asString();
+        Date updateTime=jwt.getClaims().get("updateTime").asDate();
+        String isDelete=jwt.getClaims().get("isDelete").asString();
+        Date createTime=jwt.getClaims().get("createTime").asDate();
+        ButlerUserVO butlerUserVO=new ButlerUserVO();
+        butlerUserVO.setId(id);
+        butlerUserVO.setAccount(account);
+        butlerUserVO.setCreateTime(createTime);
+        butlerUserVO.setLevelNum(levelNum);
+        butlerUserVO.setName(name);
+        butlerUserVO.setCity(city);
+        butlerUserVO.setTelephone(telephone);
+        butlerUserVO.setPassword(password);
+        butlerUserVO.setReferralCode(referralCode);
+        butlerUserVO.setRootUserId(rootUserId);
+        butlerUserVO.setIsDelete(isDelete);
+        butlerUserVO.setLeaderId(leaderId);
+        butlerUserVO.setUpdateTime(updateTime);
+        butlerUserVO.setProvince(province);
+        butlerUserVO.setRole(role);
+        return butlerUserVO;
     }
-    /**
-     * 功能描述: <根据token获取userId>
-     * 〈〉
-     * @Param: [token]
-     * @Return: int
-     * @Author: luyun
-     * @Date: 2019/12/18 12:00
-     */
-    public static int getId(String token){
-        Map<String,Claim> claimMap=new HashMap<>();
-        Claim userId=claimMap.get("userId");
-        if (Utils.isBlank(String.valueOf(userId))){
-            new RuntimeException("token异常 重新登录");
-        }
-        return Integer.valueOf(userId.asString());
 
-    }
 
 
 }
+
+
