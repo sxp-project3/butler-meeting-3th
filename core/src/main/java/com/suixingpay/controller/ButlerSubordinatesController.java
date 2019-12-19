@@ -6,6 +6,7 @@ import com.suixingpay.response.Response;
 import com.suixingpay.service.ButlerSubordinatesServcie;
 import com.suixingpay.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,7 +23,7 @@ import java.util.Map;
  * @Date 2019/12/19 10:08
  * @Version 1.0
  **/
-
+@Controller
 public class ButlerSubordinatesController {
 
 

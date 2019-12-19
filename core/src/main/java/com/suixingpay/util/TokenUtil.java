@@ -125,9 +125,9 @@ public class TokenUtil {
         String province=jwt.getClaims().get("province").asString();
         String city=jwt.getClaims().get("city").asString();
         String role=jwt.getClaims().get("role").asString();
-        String updateTime=jwt.getClaims().get("updateTime").asString();
+        Date updateTime=jwt.getClaims().get("updateTime").asDate();
         String isDelete=jwt.getClaims().get("isDelete").asString();
-        String createTime=jwt.getClaims().get("createTime").asString();
+        Date createTime=jwt.getClaims().get("createTime").asDate();
         map.put("id",id);
         map.put("userLevel",userLevel);
         map.put("name",name);
@@ -139,10 +139,10 @@ public class TokenUtil {
         map.put("province",province);
         map.put("city",city);
         map.put("leaderId",leaderId);
-        map.put("updateTime",updateTime);
+        map.put("updateTime",JacksonUtil.dateToString(updateTime));
         map.put("isDelete",isDelete);
         map.put("role",role);
-        map.put("createTime",createTime);
+        map.put("createTime",JacksonUtil.dateToString(createTime));
         return map;
     }
 

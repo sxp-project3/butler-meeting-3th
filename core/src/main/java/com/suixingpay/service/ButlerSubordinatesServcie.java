@@ -16,15 +16,6 @@ import java.util.List;
 public interface ButlerSubordinatesServcie {
 
     /**
-     * 功能描述: <根据用户id查询所有父级id>
-     * 〈〉
-     * @Param: [id]
-     * @Return: java.lang.Integer
-     * @Author: luyun
-     * @Date: 2019/12/18 17:54
-     */
-    ButlerSubordinates selectUserIdBySubId(int id);
-    /**
      * 功能描述: <根据父类id查询用户信息>
      * 〈〉
      * @Param: [id]
@@ -42,13 +33,5 @@ public interface ButlerSubordinatesServcie {
      * @Date: 2019/12/19 10:07
      */
     ButlerSubordinates selectParentInfoByid(Integer id);
-    /**
-     * 功能描述: <根据用户id查询父类id>
-     * 〈〉
-     * @Param: [id]
-     * @Return: java.lang.Integer
-     * @Author: luyun
-     * @Date: 2019/12/19 11:08
-     */
-    Integer selectLeaderByid(Integer id);
+
 }
