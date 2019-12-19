@@ -71,15 +71,15 @@ public class SignController {
         if (list.contains(userId)){
             LOGGER.info("已报名的签到");
             signService.updateSignIn(sign);
-        }
-
-        //未报名的签到，增加数据
+        }else {
+            //未报名的签到，增加数据
             sign.setUserId(userId);
             sign.setMeetingId(meetingId);
             sign.setSigninTime(new Date());
             sign.setIsSignin(1);
             LOGGER.info("未报名的签到");
             signService.insertSignIn(sign);
+        }
         return Response.getInstance(CodeEnum.SUCCESS,"签到成功");
     }
 }
