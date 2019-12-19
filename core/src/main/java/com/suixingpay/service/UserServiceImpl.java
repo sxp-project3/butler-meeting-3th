@@ -1,16 +1,24 @@
 package com.suixingpay.service;
 
 import com.auth0.jwt.interfaces.Claim;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.suixingpay.mapper.ButlerUserMapper;
 import com.suixingpay.pojo.ButlerUser;
+import com.suixingpay.util.JacksonUtil;
 import com.suixingpay.util.TokenUtil;
 import com.suixingpay.vo.ButlerUserVO;
 import lombok.extern.slf4j.Slf4j;
+import org.omg.CORBA.TIMEOUT;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author 詹文良
@@ -23,8 +31,40 @@ import java.util.Map;
 @Slf4j
 public class UserServiceImpl implements UserService {
 
+    /**
+     * 用户的实体 Mapper
+     */
     @Resource
     private ButlerUserMapper butlerUserMapper;
+
+
+    /**
+     * Redis 命令模板
+     */
+    @Autowired
+    private RedisTemplate<String, Object> redisTemplate;
+
+    /**
+     * 缓存 key，用户 id
+     */
+    private static final String USER_ID = "user:id:";
+
+
+    /**
+     * 缓存 val，用户 token 的有效期
+     */
+    private static final String TOKEN_VALIDITY_TIME = "token:validity:time:";
+
+    /**
+     * 缓存用户状态，也就是缓存 HASH 在 Redis 的名字
+     */
+    private static final String USER_STATUS = "User_Status_Cache";
+
+
+    /**
+     * 缓存 token 过期时间，单位 h
+     */
+    private static final int EXPIRE_TIME = 24;
 
     @Override
     public ButlerUserVO userLogIn(ButlerUser butlerUser) {
@@ -37,12 +77,20 @@ public class UserServiceImpl implements UserService {
 
         // 用户集合为空，说明查不到，不为空，则查询到
         if (butlerUserList.size() != 0) {
-            // 查询到的用户
+
+            // 查询到的用户，返回用户信息给前端
             ButlerUser user = butlerUserList.get(0);
             String token = TokenUtil.creatToken(user);
-            // 测试解密 token
-            parseUser(token);
+
+            // 缓存 token 到 redis， 并设置过期时间
+            String cacheKey = USER_ID + user.getId();
+            String cacheVal = TOKEN_VALIDITY_TIME + System.currentTimeMillis();
+            redisTemplate.opsForValue().set(cacheKey, cacheVal);
+            redisTemplate.expire(cacheKey, EXPIRE_TIME, TimeUnit.HOURS);
+
+            // 生成用户视图对象
             butlerUserVO = new ButlerUserVO(user, token);
+
         }
 
         return butlerUserVO;
@@ -50,13 +98,32 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ButlerUserVO parseUser(String token) {
-        Map<String, Claim> map = TokenUtil.verifyToken(token);
-        for (Map.Entry entry : map.entrySet()) {
-            String key = (String) entry.getKey();
-            Claim val = (Claim) entry.getValue();
-            log.warn(key + "---" + val.asString());
+
+        // 通过 token 解析用户信息
+        Map<String, Object> map = TokenUtil.verifyToken(token);
+
+        ButlerUserVO butlerUserVO = null;
+
+        try {
+            butlerUserVO = (ButlerUserVO) JacksonUtil.mapToBean(map, ButlerUserVO.class);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return null;
+
+        return butlerUserVO;
     }
 
+    @Override
+    public String isUserLogin(String token) {
+
+        // TODO: 2019/12/19 待测试用户已登录的有效时间
+
+        // 解析 token
+        ButlerUserVO butlerUserVO = parseUser(token);
+
+        // 在缓存中查询是否有该 token，不存在返回空
+        String time = (String) redisTemplate.opsForValue().get(butlerUserVO.getId());
+
+        return time;
+    }
 }
