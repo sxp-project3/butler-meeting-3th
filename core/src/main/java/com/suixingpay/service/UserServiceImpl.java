@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -41,6 +40,7 @@ public class UserServiceImpl implements UserService {
             // 查询到的用户
             ButlerUser user = butlerUserList.get(0);
             String token = TokenUtil.creatToken(user);
+            // 测试解密 token
             parseUser(token);
             butlerUserVO = new ButlerUserVO(user, token);
         }
@@ -58,4 +58,5 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
 }
