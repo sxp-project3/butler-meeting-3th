@@ -111,19 +111,30 @@ public class SignController {
             return Response.getInstance(CodeEnum.FAIL,"请选择正确的会议");
         }
 
+        //获取到签到状态做判断是否已经参加
+        Sign sign1 = signService.selectWithOutIdAndUserId(sign);
 
-        //已报名的签到，修改签到状态
-        if (list.contains(userId)){
-            LOGGER.info("已报名的签到");
-            signService.updateSignIn(sign);
-        }else {
+        //如果当前用户没有报名直接签到的情况
+        if (sign1 == null){
             //未报名的签到，增加数据
             sign.setUserId(userId);
             sign.setMeetingId(meetingId);
             sign.setSigninTime(date);
             sign.setIsSignin(1);
+
             LOGGER.info("未报名的签到");
             signService.insertSignIn(sign);
+
+            return Response.getInstance(CodeEnum.SUCCESS,"签到成功");
+        } else if (sign1.getIsSignin() == 1){
+            LOGGER.info("已签到，不可以重复签到");
+            return Response.getInstance(CodeEnum.FAIL,"已签到，不可重复签到");
+        }
+
+        //当前用户已报名的签到情况
+        if (list.contains(userId)){
+            LOGGER.info("已报名的签到");
+            signService.updateSignIn(sign);
         }
         return Response.getInstance(CodeEnum.SUCCESS,"签到成功");
     }
