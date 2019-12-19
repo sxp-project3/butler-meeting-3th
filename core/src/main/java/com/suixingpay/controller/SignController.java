@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/user")
@@ -55,7 +57,7 @@ public class SignController {
             return Response.getInstance(CodeEnum.FAIL,"请选择正确的会议");
         }
 
-        //判断是否已超过报名时间
+        //判断是否已超过报名时间，通过会议id查询报名截止时间
         Meeting meeting = meetingKjService.getOne(meetingId);
         if (meeting == null){
             LOGGER.info("不存在此会议，无法报名");
@@ -111,7 +113,15 @@ public class SignController {
             return Response.getInstance(CodeEnum.FAIL,"请选择正确的会议");
         }
 
-        //获取到签到状态做判断是否已经参加
+        //判断是否有当前会议
+        Meeting meeting = meetingKjService.getOne(meetingId);
+        if (meeting == null) {
+            LOGGER.info("不存在此会议，无法签到");
+            return Response.getInstance(CodeEnum.FAIL, "不存在此会议，无法签到");
+        }
+
+
+        //获取到签到状态做判断是否已经签到
         Sign sign1 = signService.selectWithOutIdAndUserId(sign);
 
         //如果当前用户没有报名直接签到的情况
@@ -139,7 +149,30 @@ public class SignController {
         return Response.getInstance(CodeEnum.SUCCESS,"签到成功");
     }
 
+    @RequestMapping(value = "/selectSignUp")
+    public Response SignUpInfo(@RequestBody Sign sign){
 
+        LOGGER.info("接收的参数为[{},{}]",sign.getUserId(), sign.getMeetingId());
+
+        //接收前端参数
+        Integer userId = sign.getUserId();
+        Integer meetingId = sign.getMeetingId();
+
+        //定义一个Map用于装结果
+        Map<String, Object> map = new HashMap<>();
+
+        //通过会议id查询会议信息
+        Meeting meeting = meetingKjService.getOne(meetingId);
+        map.put("Province", meeting.getPlaceCity());
+        map.put("city", meeting.getPlaceCounty());
+
+        //通过用户id查询报名、签到信息
+        Sign sign1 = signService.selectWithOutIdAndUserId(sign);
+        map.put("SignUpTime", sign1.getSignupTime());
+        map.put("IsSignIn", sign1.getIsSignin());
+
+        return Response.getInstance(CodeEnum.SUCCESS,map);
+    }
     
 //    @RequestMapping(value = "/test",method = RequestMethod.POST)
 //    public Sign test(){
