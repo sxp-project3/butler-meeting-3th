@@ -28,33 +28,25 @@ public class Meeting {
     //主办方
     @NotBlank(message = "主办方为空！")
     private String host;
-    //报名开始时间
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @NotNull(message = "报名开始时间为空！")
-    private Date signUpStartTime;
     //报名截止时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @NotNull(message = "报名截止时间为空！")
     private Date signUpEndTime;
     //会议开始时间
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @NotNull(message = "会议开始时间为空！")
     private Date startTime;
-    //会议结束时间
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date endTime;
+
     //会议时长（小时）
     @DecimalMin("0")
-    private double durationShi;
-    //会议时长（秒）
-    private Integer durationMiao;
-    //会议地点
-    @NotBlank(message = "会议地点为空！")
-    private String place;
+    private double duration;
+    //会议地点省
+    private String placeProvince;
+    //会议地点市
+    private String placeCity;
+    //会议地点县
+    private String placeCounty;
     //详细地址
     @NotBlank(message = "详细地址为空！")
     private String detailAddress;
@@ -113,14 +105,6 @@ public class Meeting {
         this.host = host;
     }
 
-    public Date getSignUpStartTime() {
-        return signUpStartTime;
-    }
-
-    public void setSignUpStartTime(Date signUpStartTime) {
-        this.signUpStartTime = signUpStartTime;
-    }
-
     public Date getSignUpEndTime() {
         return signUpEndTime;
     }
@@ -137,36 +121,36 @@ public class Meeting {
         this.startTime = startTime;
     }
 
-    public Date getEndTime() {
-        return endTime;
+    public double getDuration() {
+        return duration;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
+    public void setDuration(double durationShi) {
+        this.duration = durationShi;
     }
 
-    public double getDurationShi() {
-        return durationShi;
+    public String getPlaceProvince() {
+        return placeProvince;
     }
 
-    public void setDurationShi(double durationShi) {
-        this.durationShi = durationShi;
+    public void setPlaceProvince(String placeProvince) {
+        this.placeProvince = placeProvince;
     }
 
-    public Integer getDurationMiao() {
-        return durationMiao;
+    public String getPlaceCity() {
+        return placeCity;
     }
 
-    public void setDurationMiao(Integer durationMiao) {
-        this.durationMiao = durationMiao;
+    public void setPlaceCity(String placeCity) {
+        this.placeCity = placeCity;
     }
 
-    public String getPlace() {
-        return place;
+    public String getPlaceCounty() {
+        return placeCounty;
     }
 
-    public void setPlace(String place) {
-        this.place = place;
+    public void setPlaceCounty(String placeCounty) {
+        this.placeCounty = placeCounty;
     }
 
     public String getDetailAddress() {

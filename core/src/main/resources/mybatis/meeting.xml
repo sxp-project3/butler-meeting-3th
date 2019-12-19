@@ -8,13 +8,12 @@
         <result column="if_fee" jdbcType="INTEGER" property="ifFee" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="host" jdbcType="VARCHAR" property="host" />
-        <result column="sign_up_starttime" jdbcType="TIMESTAMP" property="signUpStartTime" />
         <result column="sign_up_endtime" jdbcType="TIMESTAMP" property="signUpEndTime" />
         <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
-        <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
         <result column="type" jdbcType="VARCHAR" property="type" />
-        <result column="duration" jdbcType="INTEGER" property="durationMiao" />
-        <result column="place" jdbcType="VARCHAR" property="place" />
+        <result column="place_province" jdbcType="VARCHAR" property="placeProvince" />
+        <result column="place_city" jdbcType="VARCHAR" property="placeCity" />
+        <result column="place_county" jdbcType="VARCHAR" property="placeCounty" />
         <result column="detail_address" jdbcType="VARCHAR" property="detailAddress" />
         <result column="description" jdbcType="VARCHAR" property="description" />
         <result column="status" jdbcType="INTEGER" property="status" />
@@ -30,12 +29,12 @@
         if_fee,
         name,
         host,
-        sign_up_starttime,
         sign_up_endtime,
         start_time,
-        end_time,
         duration,
-        place,
+        place_province,
+        place_city,
+        place_county,
         detail_address,
         description,
         status,
@@ -62,23 +61,23 @@
             <if test="host != null and host !=''">
                 host,
             </if>
-            <if test="signUpStartTime != null">
-                sign_up_starttime,
-            </if>
             <if test="signUpEndTime != null">
                 sign_up_endtime,
             </if>
             <if test="startTime != null">
                 start_time,
             </if>
-            <if test="endTime != null">
-                end_time,
-            </if>
-            <if test="durationMiao != null">
+            <if test="duration != null">
                 duration,
             </if>
-            <if test="place != null and place !=''">
-                place,
+            <if test="placeProvince != null and placeProvince !=''">
+                place_province,
+            </if>
+            <if test="placeCity != null and placeCity !=''">
+                place_city,
+            </if>
+            <if test="placeCounty != null and placeCounty !=''">
+                place_county,
             </if>
             <if test="detailAddress != null and detailAddress !=''">
                 detail_address,
@@ -112,23 +111,23 @@
             <if test="host != null and host !=''">
                 #{host,jdbcType=VARCHAR},
             </if>
-            <if test="signUpStartTime != null">
-                #{signUpStartTime,jdbcType=TIMESTAMP},
-            </if>
             <if test="signUpEndTime != null">
                 #{signUpEndTime,jdbcType=TIMESTAMP},
             </if>
             <if test="startTime != null">
                 #{startTime,jdbcType=TIMESTAMP},
             </if>
-            <if test="endTime != null">
-                #{endTime,jdbcType=TIMESTAMP},
+            <if test="duration != null">
+                #{duration,jdbcType=INTEGER},
             </if>
-            <if test="durationMiao != null">
-                #{durationMiao,jdbcType=INTEGER},
+            <if test="placeProvince != null and placeProvince !=''">
+                #{placeProvince,jdbcType=VARCHAR},
             </if>
-            <if test="place != null and place !=''">
-                #{place,jdbcType=VARCHAR},
+            <if test="placeCity != null and placeCity !=''">
+                #{placeCity,jdbcType=VARCHAR},
+            </if>
+            <if test="placeCounty != null and placeCounty !=''">
+                #{placeCounty,jdbcType=VARCHAR},
             </if>
             <if test="detailAddress != null and detailAddress !=''">
                 #{detailAddress,jdbcType=VARCHAR},
@@ -152,7 +151,7 @@
         select
         <include refid="Active_Column_List"/>
         from meeting
-        where sign_up_starttime &lt; #{nowDate} and sign_up_endtime &gt; #{nowDate} and status=1
+        where sign_up_endtime &gt; #{nowDate}
         <if test="createUserIds != null">
             and create_user_id in
             <foreach collection="createUserIds" item="userId" open="(" close=")" separator=",">
@@ -160,7 +159,6 @@
             </foreach>
         </if>
     </select>
-
     <select id="selectOneById" resultMap="BaseResultMap">
         select
         <include refid="Active_Column_List"/>
@@ -192,5 +190,53 @@
         </if>
 
     </select>
-
+    <!--    动态 SQL : 修改会议信息 -->
+    <update id="updateMeetingById" parameterType="com.suixingpay.pojo.Meeting">
+        update meeting
+        <set>
+            <if test="type != null and type !=''">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="ifFee != null">
+                if_fee = #{ifFee,jdbcType=INTEGER},
+            </if>
+            <if test="name != null and name !=''">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null and host !=''">
+                host = #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="signUpEndTime != null">
+                sign_up_endtime = #{signUpEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="duration != null">
+                duration = #{duration,jdbcType=INTEGER},
+            </if>
+            <if test="placeProvince != null and placeProvince !=''">
+                place_province = #{placeProvince,jdbcType=VARCHAR},
+            </if>
+            <if test="placeCity != null and placeCity !=''">
+                place_city = #{placeCity,jdbcType=VARCHAR},
+            </if>
+            <if test="placeCounty != null and placeCounty !=''">
+                place_county = #{placeCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="detailAddress != null and detailAddress !=''">
+                detail_address = #{detailAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null and description !=''">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=INTEGER}
+            </if>
+        </set>
+        where id = #{id, jdbcType=INTEGER}
+    </update>
 </mapper>
