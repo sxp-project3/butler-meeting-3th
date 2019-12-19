@@ -10,8 +10,29 @@
         <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
         <result column="is_delete" property="isDelete" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap id="BasedResultMap" type="com.suixingpay.pojo.ButlerUser">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="telephone" property="telephone" jdbcType="VARCHAR"/>
+        <result column="is_delete" property="isDelete" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="root_user_id" property="rootUserId" jdbcType="INTEGER"/>
+        <result column="leader_id" property="leaderId" jdbcType="INTEGER"/>
+        <result column="referral_code" property="referralCode" jdbcType="VARCHAR"/>
+        <result column="level_num" property="levelNum" jdbcType="INTEGER"/>
+        <result column="province" property="province" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="role" property="role" jdbcType="INTEGER"/>
+    </resultMap>
     <sql id="Base_Column_List">
     id, user_id, subordinates_id, create_time, update_time, is_delete
+    </sql>
+    <sql id="Based_Column_List">
+    id,name,account,password,telephone,id_delete, is_delete, create_time, update_time, root_user_id,leader_id,
+    referral_code,level_num,province,city,role
     </sql>
     
     <select id="selectUserIdBySubId" resultType="java.lang.Integer">
@@ -23,10 +44,10 @@
     </select>
     <select id="selectParentInfoBySubId" resultType="com.suixingpay.pojo.ButlerSubordinates">
         select
-        <include refid="Base_Column_List"></include>
+        <include refid="Based_Column_List"></include>
         from butler_subordinates as b,butler_user as a
         where 1 = 1
-        and a.id=b.user_id and user_id=#{id}
+        and a.id=b.user_id and b.user_id=#{id}
     </select>
     <select id="selectLeaderByid" resultType="java.lang.Integer">
         select
@@ -37,7 +58,7 @@
     </select>
     <select id="selectParentInfoByid" resultType="com.suixingpay.pojo.ButlerSubordinates">
         select
-        <include refid="Base_Column_List"></include>
+        <include refid="Based_Column_List"></include>
         from butler_user
         where  1=1
         and id=#{id}
