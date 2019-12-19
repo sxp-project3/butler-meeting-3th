@@ -41,6 +41,6 @@ public class MeetingKjServiceImpl implements MeetingKjService {
 
     }
 
-    @Override
-    public List<Meeting> get
+//    @Override
+//    public List<Meeting> get
 }

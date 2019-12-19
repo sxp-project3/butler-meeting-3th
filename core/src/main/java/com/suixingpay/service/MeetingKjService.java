@@ -15,7 +15,7 @@ public interface MeetingKjService {
 
     Meeting getOne(Integer meetingId);
 
-    List<Meeting> getMyMeeting(Integer userId);
-
-    List<Meeting> searchMeeting(Map params);
+//    List<Meeting> getMyMeeting(Integer userId);
+//
+//    List<Meeting> searchMeeting(Map params);
 }
