@@ -68,6 +68,14 @@
         and id=#{id}
     </select>
 
+    <select id="selectByid" resultType="com.suixingpay.pojo.ButlerUser">
+        select
+        <include refid="Based_Column_List"/>
+        from butler_user
+        where  1=1
+        and id=#{id}
+    </select>
+
 
 
 </mapper>

@@ -54,5 +54,17 @@ public class ButlerSubordinatesServiceImpl implements ButlerSubordinatesServcie{
         int ids=butlerSubordinatesMapper.selectLeaderByid(id);
         return butlerSubordinatesMapper.selectParentInfoByid(ids);
     }
+    /**
+     * 功能描述: <根据id查询用户信息>
+     * 〈〉
+     * @Param: [id]
+     * @Return: com.suixingpay.pojo.ButlerUser
+     * @Author: luyun
+     * @Date: 2019/12/19 21:12
+     */
+    public  ButlerUser selectByid(Integer id){
+
+        return butlerSubordinatesMapper.selectByid(id);
+    }
 
 }
