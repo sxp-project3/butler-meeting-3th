@@ -1,5 +1,10 @@
 package com.suixingpay.service;
 
+import com.suixingpay.enumeration.CodeEnum;
+import com.suixingpay.mapper.MeetingMapper;
+import com.suixingpay.pojo.Meeting;
+import com.suixingpay.response.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -8,5 +13,20 @@ import org.springframework.stereotype.Service;
  * @date 2019/12/18 15:37
  */
 @Service
-public class MeetingServiceImpl implements MeetingService{
+public class MeetingServiceImpl implements MeetingService {
+    @Autowired
+    private MeetingMapper meetingMapper;
+
+
+    //插入一条会议，对应新建会议功能
+    @Override
+    public Integer addMeeting(Meeting Meeting) {
+        Integer result = meetingMapper.insertMeeting(Meeting);
+        if (result >= 1) {
+            return 1;
+        }
+        return 0;
+
+
+    }
 }

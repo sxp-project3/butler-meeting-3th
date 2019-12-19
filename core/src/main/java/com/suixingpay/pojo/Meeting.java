@@ -1,5 +1,9 @@
 package com.suixingpay.pojo;
 
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -11,30 +15,41 @@ public class Meeting {
     //会议id
     private Integer id;
     //会议类型
+    @NotBlank(message = "会议类型 为空！")
     private String type;
     //是否收费
+    @NotNull(message = "是否收费 为空！")
     private Integer ifFee;
     //会议名称
+    @NotBlank(message = "会议名称为空！")
     private String name;
     //主办方
+    @NotBlank(message = "主办方为空！")
     private String host;
     //报名开始时间
+    @NotNull(message = "报名开始时间为空！")
     private Date signUpStartTime;
     //报名截止时间
+    @NotNull(message = "报名截止时间为空！")
     private Date signUpEndTime;
     //会议开始时间
+    @NotNull(message = "会议开始时间为空！")
     private Date startTime;
     //会议结束时间
     private Date endTime;
     //会议时长（小时）
+    @DecimalMin("0")
     private double durationShi;
     //会议时长（秒）
     private Integer durationMiao;
     //会议地点
+    @NotBlank(message = "会议地点为空！")
     private String place;
     //详细地址
+    @NotBlank(message = "详细地址为空！")
     private String detailAddress;
     //会议描述
+    @NotBlank(message = "会议描述为空！")
     private String description;
     //会议当前状态
     private Integer status;
