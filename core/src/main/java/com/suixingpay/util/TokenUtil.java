@@ -3,16 +3,11 @@ package com.suixingpay.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.suixingpay.pojo.ButlerUser;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.servlet.http.HttpServletRequest;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * ClassName TokenUtil
@@ -102,35 +97,51 @@ public class TokenUtil {
      * @Author: luyun
      * @Date: 2019/12/18 11:54
      */
-    public static Map<String, Claim> verifyToken(String token){
+    public static Map<String, Object> verifyToken(String token){
         DecodedJWT jwt=null;
         try {
             JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(SECRET)).build();
              jwt=jwtVerifier.verify(token);
-             Map<String,Claim> claim=jwt.getClaims();
 
         }catch (Exception e){
             e.printStackTrace();
         }
-        return jwt.getClaims();
+        Map<String, Object> map = new HashMap<>();
+        String id=jwt.getClaims().get("id").asString();
+        String userLevel=jwt.getClaims().get("userLevel").asString();
+        String name=jwt.getClaims().get("name").asString();
+        String telephone=jwt.getClaims().get("telephone").asString();
+        String account=jwt.getClaims().get("account").asString();
+        String password=jwt.getClaims().get("password").asString();
+        String rootUserId=jwt.getClaims().get("rootUserId").asString();
+        String leaderId=jwt.getClaims().get("leaderId").asString();
+        String referralCode=jwt.getClaims().get("referralCode").asString();
+        String province=jwt.getClaims().get("province").asString();
+        String city=jwt.getClaims().get("city").asString();
+        String role=jwt.getClaims().get("role").asString();
+        String updateTime=jwt.getClaims().get("updateTime").asString();
+        String isDelete=jwt.getClaims().get("isDelete").asString();
+        String createTime=jwt.getClaims().get("createTime").asString();
+        map.put("id",id);
+        map.put("userLevel",userLevel);
+        map.put("name",name);
+        map.put("telephone",telephone);
+        map.put("account",account);
+        map.put("password",password);
+        map.put("rootUserId",rootUserId);
+        map.put("referralCode",referralCode);
+        map.put("province",province);
+        map.put("city",city);
+        map.put("leaderId",leaderId);
+        map.put("updateTime",updateTime);
+        map.put("isDelete",isDelete);
+        map.put("role",role);
+        map.put("createTime",createTime);
+        return map;
     }
-    /**
-     * 功能描述: <根据token获取userId>
-     * 〈〉
-     * @Param: [token]
-     * @Return: int
-     * @Author: luyun
-     * @Date: 2019/12/18 12:00
-     */
-    public static int getId(String token){
-        Map<String,Claim> claimMap=verifyToken(token);
-        Claim userId = claimMap.get("user_id");
-        if (Utils.isBlank(String.valueOf(userId))){
-            new RuntimeException("token异常 重新登录");
-        }
-        return Integer.valueOf(userId.asString());
 
-    }
 
 
 }
+
+

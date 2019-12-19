@@ -40,4 +40,5 @@ dependencies {
 //    redis 依赖
     compile 'org.springframework.boot:spring-boot-starter-data-redis:1.5.9.RELEASE'
 
+
 }

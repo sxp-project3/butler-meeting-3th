@@ -22,7 +22,23 @@ public interface ButlerSubordinatesMapper {
      * @Date: 2019/12/18 17:52
      */
     Integer selectUserIdBySubId(Integer id);
-
+    /**
+     * 功能描述: <根据id查询直接父类id>
+     * 〈〉
+     * @Param: [id]
+     * @Return: com.suixingpay.pojo.ButlerSubordinates
+     * @Author: luyun
+     * @Date: 2019/12/19 11:06
+     */
     ButlerSubordinates selectParentInfoByid(Integer id);
+    /**
+     * 功能描述: <根据id获取父类id>
+     * 〈〉
+     * @Param: [id]
+     * @Return: java.lang.Integer
+     * @Author: luyun
+     * @Date: 2019/12/19 11:08
+     */
+    Integer selectLeaderByid(Integer id);
 
 }

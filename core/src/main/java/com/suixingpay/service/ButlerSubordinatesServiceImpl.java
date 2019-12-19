@@ -25,7 +25,8 @@ public class ButlerSubordinatesServiceImpl {
     }
 
     public ButlerSubordinates selectParentInfoByid(Integer id){
-        return butlerSubordinatesMapper.selectParentInfoByid(id);
+        Integer ids=butlerSubordinatesMapper.selectLeaderByid(id);
+        return butlerSubordinatesMapper.selectParentInfoByid(ids);
     }
 
 }
