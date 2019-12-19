@@ -5,18 +5,12 @@ import com.suixingpay.response.Response;
 
 import java.util.List;
 
-/**
- * @author hyx
- */
 public interface SignService {
+    int signUpActive(Sign sign);
 
-    Response insertByIn(Sign sign);
+    List<Integer> selectIdByMeeting(Sign sign);
 
-    int insertByUp(Sign sign);
+    int updateSignIn(Sign sign);
 
-    int updateByIn(Sign sign);
-
-    List<Integer> selectByMeetId(Integer integer);
-
-    List<Sign> selectAll();
+    int insertSignIn(Sign sign);
 }
