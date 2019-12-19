@@ -27,6 +27,8 @@ public class SignController {
     @RequestMapping(value = "/signup",method = RequestMethod.POST)
     public Response signUpActive(@RequestBody Sign sign){
 
+        Date date = new Date();
+
         //接参
         LOGGER.info("接收的参数为[{}]",sign.getUserId(),sign.getMeetingId());
         Integer userId = sign.getUserId();
@@ -57,6 +59,8 @@ public class SignController {
     @RequestMapping(value = "/signin",method = RequestMethod.POST)
     public Response selectIdByMeeting(@RequestBody Sign sign){
 
+        Date date = new Date();
+
         //接参
         LOGGER.info("接收的参数为[{}]",sign.getUserId(),sign.getMeetingId());
 
@@ -71,15 +75,44 @@ public class SignController {
         if (list.contains(userId)){
             LOGGER.info("已报名的签到");
             signService.updateSignIn(sign);
-        }
-
-        //未报名的签到，增加数据
+        }else {
+            //未报名的签到，增加数据
             sign.setUserId(userId);
             sign.setMeetingId(meetingId);
-            sign.setSigninTime(new Date());
+            sign.setSigninTime(date);
             sign.setIsSignin(1);
             LOGGER.info("未报名的签到");
             signService.insertSignIn(sign);
+        }
         return Response.getInstance(CodeEnum.SUCCESS,"签到成功");
     }
+
+
+    
+//    @RequestMapping(value = "/test",method = RequestMethod.POST)
+//    public Sign test(){
+//
+//        Sign sign = new Sign();
+//        sign.setUserId(1111);
+//        sign.setMeetingId(11);
+//
+//        Sign signs = signService.selectWithOutIdAndUserId(sign);
+//
+//        return signs;
+//    }
+//    @RequestMapping(value = "/testCount",method = RequestMethod.POST)
+//    public Response testCount(){
+//        int meeting=11;
+//        int i = signService.selectCountSignUp(meeting);
+//        int y = signService.selectCountSignIn(meeting);
+//
+//        System.out.println("当前报名人数："+i+"会议id为："+meeting);
+//        System.out.println("当前签到人数："+y+"会议id为："+meeting);
+//
+//        return Response.getInstance(CodeEnum.SUCCESS,"查询成功");
+//
+//    }
+
+
+
 }

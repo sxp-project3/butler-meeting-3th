@@ -13,4 +13,10 @@ public interface SignService {
     int updateSignIn(Sign sign);
 
     int insertSignIn(Sign sign);
+
+    int selectCountSignIn(Integer integer);
+
+    int selectCountSignUp(Integer integer);
+
+    Sign selectWithOutIdAndUserId(Sign sign);
 }

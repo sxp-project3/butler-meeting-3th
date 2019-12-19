@@ -1,16 +1,13 @@
 package com.suixingpay.service;
 
-import com.suixingpay.enumeration.CodeEnum;
 import com.suixingpay.mapper.SignMapper;
 import com.suixingpay.pojo.Sign;
-import com.suixingpay.response.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -74,5 +71,23 @@ public class SignServiceImpl implements SignService{
     @Override
     public int insertSignIn(Sign sign) {
         return signMapper.insertSignIn(sign);
+    }
+
+    //通过meetingId查询签到人数
+    @Override
+    public int selectCountSignIn(Integer integer) {
+        return signMapper.selectCountSignIn(integer);
+    }
+
+    //通过meetingId查询报名人数
+    @Override
+    public int selectCountSignUp(Integer integer) {
+        return signMapper.selectCountSignUp(integer);
+    }
+
+    //通过meetingId和userId查询除主键和userId以外的数据
+    @Override
+    public Sign selectWithOutIdAndUserId(Sign sign) {
+        return signMapper.selectWithOutIdAndUserId(sign);
     }
 }

@@ -15,4 +15,10 @@ public interface SignMapper {
 
     int insertSignIn(Sign sign);
 
+    int selectCountSignIn(Integer integer);
+
+    int selectCountSignUp(Integer integer);
+
+    Sign selectWithOutIdAndUserId(Sign sign);
+
 }

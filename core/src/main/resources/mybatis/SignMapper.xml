@@ -10,15 +10,21 @@
     <result column="is_signup" jdbcType="INTEGER" property="isSignup" />
     <result column="is_signin" jdbcType="INTEGER" property="isSignin" />
   </resultMap>
-<!--  <sql id="Base_Column_List">-->
-<!--    id, user_id, meeting_id, signup_time, signin_time, is_signup, is_signin-->
-<!--  </sql>-->
-<!--  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">-->
-<!--    select-->
-<!--    <include refid="Base_Column_List" />-->
-<!--    from sign-->
-<!--    where id = #{id,jdbcType=INTEGER}-->
-<!--  </select>-->
+  <sql id="Base_Column_List">
+    id, user_id, meeting_id, signup_time, signin_time, is_signup, is_signin
+  </sql>
+
+
+  <sql id="Base_Column_List_WithOutIdAndUserId">
+    meeting_id, signup_time, signin_time, is_signup, is_signin
+  </sql>
+
+<!--   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">-->
+<!--        select-->
+<!--        <include refid="Base_Column_List" />-->
+<!--        from sign-->
+<!--        where id = #{id,jdbcType=INTEGER}-->
+<!--   </select>-->
 <!--  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">-->
 <!--    delete from sign-->
 <!--    where id = #{id,jdbcType=INTEGER}-->
@@ -118,13 +124,34 @@
 insert into sign (user_id, meeting_id, signup_time, is_signup) VALUES (#{userId,jdbcType=INTEGER}, #{meetingId,jdbcType=INTEGER}, #{signupTime,jdbcType=TIMESTAMP}, #{isSignup,jdbcType=INTEGER});
   </insert>
   <select id="selectIdByMeeting" parameterType="int" resultMap="BaseResultMap">
-select user_id from sign where meeting_id = #{meetingId};
+    select user_id from sign where meeting_id = #{meetingId};
   </select>
   <update id="updateSignIn" parameterType="com.suixingpay.pojo.Sign">
-update sign
-set signin_time = NOW(), is_signin = 1 where user_id=#{userId} and meeting_id=#{meetingId};
+    update sign
+    set signin_time = NOW(), is_signin = 1 where user_id=#{userId} and meeting_id=#{meetingId};
   </update>
   <insert id="insertSignIn" parameterType="com.suixingpay.pojo.Sign">
 insert into sign (user_id, meeting_id, signin_time, is_signin) values (#{userId,jdbcType=INTEGER}, #{meetingId,jdbcType=INTEGER}, #{signinTime,jdbcType=TIMESTAMP}, #{isSignin,jdbcType=INTEGER});
   </insert>
+
+    <select id="selectCountSignIn" parameterType="Integer" resultType="Integer">
+        select count(*)
+        from sign
+        where meeting_id=#{meetingId} and is_signin=1;
+    </select>
+
+    <select id="selectCountSignUp" parameterType="Integer" resultType="Integer">
+        select count(*)
+        from sign
+        where meeting_id=#{meetingId} and is_signup=1;
+    </select>
+
+    <select id="selectWithOutIdAndUserId" parameterType="com.suixingpay.pojo.Sign" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List_WithOutIdAndUserId" />
+        from sign
+        where user_id=#{userId} and meeting_id=#{meetingId};
+    </select>
+
+
 </mapper>
