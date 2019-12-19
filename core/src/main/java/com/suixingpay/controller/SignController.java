@@ -80,6 +80,18 @@ public class SignController {
         Integer meetingId = sign.getMeetingId();
         Date date = new Date();
 
+        //用户参数判空
+        if (userId == null){
+            LOGGER.info("签到失败，不存在此用户");
+            return Response.getInstance(CodeEnum.FAIL,"请选择正确的用户");
+        }
+
+        //会议参数判空
+        if (meetingId == null){
+            LOGGER.info("签到失败，不存在此会议");
+            return Response.getInstance(CodeEnum.FAIL,"请选择正确的会议");
+        }
+
         //已报名的签到，修改签到状态
         if (list.contains(userId)){
             LOGGER.info("已报名的签到");
