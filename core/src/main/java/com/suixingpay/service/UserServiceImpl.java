@@ -1,15 +1,17 @@
 package com.suixingpay.service;
 
+import com.auth0.jwt.interfaces.Claim;
 import com.suixingpay.mapper.ButlerUserMapper;
 import com.suixingpay.pojo.ButlerUser;
 import com.suixingpay.util.TokenUtil;
 import com.suixingpay.vo.ButlerUserVO;
-import com.sun.org.apache.bcel.internal.generic.NEW;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 詹文良
@@ -19,6 +21,7 @@ import java.util.List;
  * Created by Jalr4ever on 2019/12/18.
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Resource
@@ -26,18 +29,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ButlerUserVO userLogIn(ButlerUser butlerUser) {
+
         // 查询出用户的集合
         List<ButlerUser> butlerUserList = butlerUserMapper.selectUserAnyCondition(butlerUser);
 
-        // 用户集合为空，说明查不到
-        if (butlerUserList.size() == 0) {
-            return new ButlerUserVO();
-        } else {
+        // 返回的显示层对象，默认是没登录，为空的
+        ButlerUserVO butlerUserVO = new ButlerUserVO();
+
+        // 用户集合为空，说明查不到，不为空，则查询到
+        if (butlerUserList.size() != 0) {
             // 查询到的用户
             ButlerUser user = butlerUserList.get(0);
-            // TODO: 2019/12/18 取到 token 做相关响应逻辑
+            String token = TokenUtil.creatToken(user);
+            parseUser(token);
+            butlerUserVO = new ButlerUserVO(user, token);
+        }
+
+        return butlerUserVO;
+    }
+
+    @Override
+    public ButlerUserVO parseUser(String token) {
+        Map<String, Claim> map = TokenUtil.verifyToken(token);
+        for (Map.Entry entry : map.entrySet()) {
+            String key = (String) entry.getKey();
+            Claim val = (Claim) entry.getValue();
+            log.warn(key + "---" + val.asString());
         }
         return null;
     }
-
 }
