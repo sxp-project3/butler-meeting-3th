@@ -7,12 +7,10 @@ import com.suixingpay.service.UserService;
 import com.suixingpay.vo.ButlerUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 詹文良
@@ -23,7 +21,6 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -40,6 +37,20 @@ public class UserController {
         } else {
             return Response.getInstance(CodeEnum.SUCCESS, butlerUserVO);
         }
+    }
+
+    @RequestMapping(value = "/index", method = RequestMethod.POST)
+    public Response indexInfo(@RequestBody Map<String, Object> param) {
+
+        // 用户登录请求的主页信息，如果已经登录，则不需要请求 login 接口
+        String token = (String) param.get("auth_token");
+        String result = userService.isUserLogin(token);
+        if (result == null) {
+            return Response.getInstance(CodeEnum.FAIL, "传入的 token 错误！");
+        } else {
+            return Response.getInstance(CodeEnum.SUCCESS, result);
+        }
 
     }
+
 }
