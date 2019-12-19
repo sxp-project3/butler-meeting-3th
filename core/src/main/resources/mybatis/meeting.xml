@@ -192,8 +192,11 @@
         <include refid="Active_Column_List"/>
         from meeting
         where 1=1
-        <if test="ifFee!=null and ifFee!=''">
+        <if test="(ifFee!=null and ifFee!='') or ifFee==0">
             and if_fee=#{ifFee}
+        </if>
+        <if test="(status!=null and status!='') or status==0">
+            and status=#{status}
         </if>
 
     </select>
