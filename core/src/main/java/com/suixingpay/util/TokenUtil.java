@@ -75,18 +75,18 @@ public class TokenUtil {
                     .withClaim("id", id)
                     .withClaim("name", name)
                     .withClaim("userLevel", userLevel)
-                    .withClaim("create_time",createTime)
+                    .withClaim("createTime",createTime)
                     .withClaim("telephone",telephone)
                     .withClaim("account",account)
                     .withClaim("password",password)
-                    .withClaim("root_user_id",rootUserId)
-                    .withClaim("leader_id",leaderId)
-                    .withClaim("referral_code",referralCode)
+                    .withClaim("rootUserId",rootUserId)
+                    .withClaim("leaderId",leaderId)
+                    .withClaim("referralCode",referralCode)
                     .withClaim("province",province)
                     .withClaim("city",city)
                     .withClaim("role",role)
-                    .withClaim("update_time",updateTime)
-                    .withClaim("is_delete",isDelete)
+                    .withClaim("updateTime",updateTime)
+                    .withClaim("isDelete",isDelete)
                     .sign(algorithm);
         } catch (Exception e){
             return msg;
@@ -105,7 +105,9 @@ public class TokenUtil {
         DecodedJWT jwt=null;
         try {
             JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(SECRET)).build();
-            jwt=jwtVerifier.verify(token);
+             jwt=jwtVerifier.verify(token);
+             Map<String,Claim> claim=jwt.getClaims();
+
         }catch (Exception e){
             e.printStackTrace();
         }
