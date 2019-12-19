@@ -152,7 +152,7 @@
         select
         <include refid="Active_Column_List"/>
         from meeting
-        where sign_up_starttime &lt; #{nowDate} and sign_up_endtime &gt; #{nowDate}
+        where sign_up_starttime &lt; #{nowDate} and sign_up_endtime &gt; #{nowDate} and status=1
         <if test="createUserIds != null">
             and create_user_id in
             <foreach collection="createUserIds" item="userId" open="(" close=")" separator=",">
@@ -161,5 +161,10 @@
         </if>
     </select>
 
+    <select id="selectOneById" resultMap="BaseResultMap">
+        select
+        <include refid="Active_Column_List"/>
+        from meeting where id=#{meetingId}
+    </select>
 
 </mapper>

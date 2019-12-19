@@ -22,4 +22,6 @@ public interface MeetingMapper {
     List<Meeting> getListForFrontShow(@Param("nowDate") Date nowDate,
                                       @Param("createUserIds") List<Integer> createUserIds);
 //    @Param("mapParams") HashMap mapParams);
+
+    Meeting selectOneById(@Param("meetingId") Integer meetingId);
 }
