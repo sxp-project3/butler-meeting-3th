@@ -50,6 +50,21 @@ public class MeetingKjServiceImpl implements MeetingKjService {
         if (!searchMeetingParamVo.getUserPromoteCode().isEmpty()) {
             // 这里需要转换管家推荐码为用户id，尚未完成
         }
+//        params.put("ifFee", searchMeetingParamVo.getIfFee());
+//        if (searchMeetingParamVo.getStarttimeBegin() != null) {
+//            params.put("starttimeBegin", searchMeetingParamVo.getStarttimeBegin());
+//        }
+//        if (searchMeetingParamVo.getStarttimeBegin() != null) {
+//            params.put("starttimeEnd", searchMeetingParamVo.getStarttimeEnd());
+//        }
+        if (searchMeetingParamVo.getIsUserCreate() > 0) {
+            searchMeetingParamVo.setCreateUserId(0);
+        }
+//        if (!searchMeetingParamVo.getMeetingStat().isEmpty()) {
+//            if (searchMeetingParamVo.getMeetingStat().equals("待发布")) {
+//                searchMeetingParamVo.setStatus();
+//            }
+//        }
         List<Meeting> meetings = meetingMapper.paramSearchList(params);
         return meetings;
     }
