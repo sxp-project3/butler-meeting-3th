@@ -69,9 +69,10 @@ public class JacksonUtil {
      * @param date
      * @return
      */
-    public static String dateToString(Date date) {
+    public static String dateToString(Object date) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         return sdf.format(date);
     }
+
 
 }

@@ -105,20 +105,26 @@ public class UserServiceImpl implements UserService {
 
         // 通过 token 解析用户信息
         return TokenUtil.verifyToken(token);
-        
+
     }
 
     @Override
     public String isUserLogin(String token) {
 
-        // TODO: 2019/12/19 待测试用户已登录的有效时间
-
         // 解析 token
         ButlerUserVO butlerUserVO = parseUser(token);
 
         // 在缓存中查询是否有该 token，不存在返回空
-        String time = (String) redisTemplate.opsForValue().get(butlerUserVO.getId());
+        String time = (String) redisTemplate.opsForValue().get(USER_ID + butlerUserVO.getId());
 
-        return time;
+        // 取到时间戳并返回
+        if (time == null) {
+            return null;
+        } else {
+            String[] str = time.split(":");
+            String result = str[str.length - 1];
+            return JacksonUtil.dateToString(Double.parseDouble(result));
+        }
+
     }
 }
