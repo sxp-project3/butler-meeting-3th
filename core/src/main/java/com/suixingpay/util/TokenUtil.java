@@ -8,6 +8,7 @@ import com.suixingpay.enumeration.CodeEnum;
 import com.suixingpay.handler.GlobalExceptionHandler;
 import com.suixingpay.pojo.ButlerUser;
 import com.suixingpay.response.Response;
+import com.suixingpay.vo.ButlerUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -48,7 +49,7 @@ public class TokenUtil {
 
             int id=user.getId();
             String  name=user.getName();
-            String  userLevel=user.getLevelNum();
+            String  levelNum=user.getLevelNum();
             String telephone=user.getTelephone();
             String account=user.getAccount();
             String password=user.getPassword();
@@ -75,7 +76,7 @@ public class TokenUtil {
             return JWT.create().withHeader(header)
                     .withClaim("id", id)
                     .withClaim("name", name)
-                    .withClaim("userLevel", userLevel)
+                    .withClaim("levelNum", levelNum)
                     .withClaim("createTime",createTime)
                     .withClaim("telephone",telephone)
                     .withClaim("account",account)
@@ -102,7 +103,7 @@ public class TokenUtil {
      * @Author: luyun
      * @Date: 2019/12/18 11:54
      */
-    public static Map<String, Object> verifyToken(String token){
+    public static ButlerUserVO verifyToken(String token){
         DecodedJWT jwt=null;
         try {
             JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(SECRET)).build();
@@ -112,8 +113,8 @@ public class TokenUtil {
             throw  new RuntimeException("token值错误");
         }
         Map<String, Object> map = new HashMap<>();
-        String id=jwt.getClaims().get("id").asString();
-        String userLevel=jwt.getClaims().get("userLevel").asString();
+        int id=jwt.getClaims().get("id").asInt();
+        String levelNum=jwt.getClaims().get("levelNum").asString();
         String name=jwt.getClaims().get("name").asString();
         String telephone=jwt.getClaims().get("telephone").asString();
         String account=jwt.getClaims().get("account").asString();
@@ -127,22 +128,23 @@ public class TokenUtil {
         Date updateTime=jwt.getClaims().get("updateTime").asDate();
         String isDelete=jwt.getClaims().get("isDelete").asString();
         Date createTime=jwt.getClaims().get("createTime").asDate();
-        map.put("id",id);
-        map.put("userLevel",userLevel);
-        map.put("name",name);
-        map.put("telephone",telephone);
-        map.put("account",account);
-        map.put("password",password);
-        map.put("rootUserId",rootUserId);
-        map.put("referralCode",referralCode);
-        map.put("province",province);
-        map.put("city",city);
-        map.put("leaderId",leaderId);
-        map.put("updateTime",JacksonUtil.dateToString(updateTime));
-        map.put("isDelete",isDelete);
-        map.put("role",role);
-        map.put("createTime",JacksonUtil.dateToString(createTime));
-        return map;
+        ButlerUserVO butlerUserVO=new ButlerUserVO();
+        butlerUserVO.setId(id);
+        butlerUserVO.setAccount(account);
+        butlerUserVO.setCreateTime(createTime);
+        butlerUserVO.setLevelNum(levelNum);
+        butlerUserVO.setName(name);
+        butlerUserVO.setCity(city);
+        butlerUserVO.setTelephone(telephone);
+        butlerUserVO.setPassword(password);
+        butlerUserVO.setReferralCode(referralCode);
+        butlerUserVO.setRootUserId(rootUserId);
+        butlerUserVO.setIsDelete(isDelete);
+        butlerUserVO.setLeaderId(leaderId);
+        butlerUserVO.setUpdateTime(updateTime);
+        butlerUserVO.setProvince(province);
+        butlerUserVO.setRole(role);
+        return butlerUserVO;
     }
 
 
