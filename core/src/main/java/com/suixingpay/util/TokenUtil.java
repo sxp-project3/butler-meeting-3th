@@ -4,7 +4,9 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.suixingpay.enumeration.CodeEnum;
 import com.suixingpay.pojo.ButlerUser;
+import com.suixingpay.response.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -100,11 +102,15 @@ public class TokenUtil {
     public static Map<String, Object> verifyToken(String token){
         DecodedJWT jwt=null;
         try {
+            if (token==null){
+                new RuntimeException("token不能为空");
+            }
             JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(SECRET)).build();
              jwt=jwtVerifier.verify(token);
 
         }catch (Exception e){
             e.printStackTrace();
+            new RuntimeException("token值不正确，请重新登录");
         }
         Map<String, Object> map = new HashMap<>();
         String id=jwt.getClaims().get("id").asString();

@@ -5,6 +5,8 @@ import com.suixingpay.pojo.ButlerSubordinates;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * ClassName ButlerSubordinatesServiceImpl
  *
@@ -18,12 +20,26 @@ public class ButlerSubordinatesServiceImpl {
 
     @Autowired
     ButlerSubordinatesMapper butlerSubordinatesMapper;
-
-    public Integer selectUserIdBySubId(int id){
-
-        return butlerSubordinatesMapper.selectUserIdBySubId(id);
+    /**
+     * 功能描述: <根据用户id查询父类信息>
+     * 〈〉
+     * @Param: [id]
+     * @Return: com.suixingpay.pojo.ButlerSubordinates
+     * @Author: luyun
+     * @Date: 2019/12/19 13:34
+     */
+    public List<ButlerSubordinates> selectUserIdBySubId(Integer id){
+        Integer userId=butlerSubordinatesMapper.selectUserIdBySubId(id);
+        return butlerSubordinatesMapper.selectParentInfoBySubId(userId);
     }
-
+    /**
+     * 功能描述: <根据id查询直接父类id,然后查询父类id信息>
+     * 〈〉
+     * @Param: [id]
+     * @Return: com.suixingpay.pojo.ButlerSubordinates
+     * @Author: luyun
+     * @Date: 2019/12/19 13:38
+     */
     public ButlerSubordinates selectParentInfoByid(Integer id){
         Integer ids=butlerSubordinatesMapper.selectLeaderByid(id);
         return butlerSubordinatesMapper.selectParentInfoByid(ids);
