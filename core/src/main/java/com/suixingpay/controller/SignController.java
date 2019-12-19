@@ -28,7 +28,7 @@ public class SignController {
     public Response signUpActive(@RequestBody Sign sign){
 
         //接参
-        LOGGER.info("接收的参数为[{}]",sign.getUserId(),sign.getMeetingId());
+        LOGGER.info("接收的参数为[{},{}]",sign.getUserId(),sign.getMeetingId());
         Integer userId = sign.getUserId();
         Integer meetingId = sign.getMeetingId();
 
@@ -58,7 +58,7 @@ public class SignController {
     public Response selectIdByMeeting(@RequestBody Sign sign){
 
         //接参
-        LOGGER.info("接收的参数为[{}]",sign.getUserId(),sign.getMeetingId());
+        LOGGER.info("接收的参数为[{},{}]",sign.getUserId(),sign.getMeetingId());
 
         //查询出当前会议下所有用户用作签到判断
         List<Integer> list = signService.selectIdByMeeting(sign);
