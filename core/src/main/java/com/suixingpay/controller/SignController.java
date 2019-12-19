@@ -10,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
@@ -128,6 +125,14 @@ public class SignController {
         return Response.getInstance(CodeEnum.SUCCESS,"签到成功");
     }
 
+    @RequestMapping(value = "/signininfo",method = RequestMethod.POST)
+    public Response SignInInfo(@RequestBody Sign sign){
+
+        Integer meetingid = 11;
+        Meeting meeting1= meetingKjService.getOne(meetingid);
+        return Response.getInstance(CodeEnum.SUCCESS,"查询成功");
+
+    }
 
     
 //    @RequestMapping(value = "/test",method = RequestMethod.POST)
