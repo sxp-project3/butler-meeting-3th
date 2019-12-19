@@ -47,7 +47,7 @@
         <include refid="Based_Column_List"></include>
         from butler_subordinates as b,butler_user as a
         where 1 = 1
-        and a.id=b.user_id and user_id=#{id}
+        and a.id=b.user_id and b.user_id=#{id}
     </select>
     <select id="selectLeaderByid" resultType="java.lang.Integer">
         select
