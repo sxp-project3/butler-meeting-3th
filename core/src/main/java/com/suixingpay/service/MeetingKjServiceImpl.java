@@ -36,10 +36,10 @@ public class MeetingKjServiceImpl implements MeetingKjService {
         return meetingMapper.selectOneById(id);
     }
 
-    @Override
-    public List<Meeting> getMyMeeting(Integer userId) {
-
-    }
+//    @Override
+//    public List<Meeting> getMyMeeting(Integer userId) {
+//
+//    }
 
 //    @Override
 //    public List<Meeting> get
