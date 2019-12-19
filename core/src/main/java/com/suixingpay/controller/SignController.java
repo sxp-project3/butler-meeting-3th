@@ -33,6 +33,11 @@ public class SignController {
 
         //接参
         LOGGER.info("接收的参数为[{},{}]",sign.getUserId(),sign.getMeetingId());
+
+        //查询出当前会议下所有用户id用作报名判断
+        List<Integer> list = signService.selectIdByMeeting(sign);
+
+        //接收前端传入的参数 用户id，会议id
         Integer userId = sign.getUserId();
         Integer meetingId = sign.getMeetingId();
         Date date = new Date();
@@ -51,17 +56,29 @@ public class SignController {
 
         //判断是否已超过报名时间
         Meeting meeting = meetingKjService.getOne(meetingId);
-        if (meeting.getSignUpEndTime().before(date)){
+        if (meeting == null){
+            LOGGER.info("不存在此会议，无法报名");
+            return Response.getInstance(CodeEnum.FAIL,"不存在此会议，无法报名");
+        }else if (meeting.getSignUpEndTime().before(date)){
             LOGGER.info("已过报名时间");
             return Response.getInstance(CodeEnum.FAIL,"已过报名时间");
         }
 
-        sign.setUserId(userId);
-        sign.setMeetingId(meetingId);
-        sign.setSignupTime(date);
-        sign.setIsSignup(1);
-        signService.signUpActive(sign);
-        LOGGER.info("报名成功");
+        //判断是否已经报名会议
+        if(list.contains(userId)){
+            LOGGER.info("已报名，不可重复报名");
+            return Response.getInstance(CodeEnum.FAIL,"已报名，不可重复报名");
+        }
+
+        //可直接报名
+        if(!list.contains(userId)){
+            sign.setUserId(userId);
+            sign.setMeetingId(meetingId);
+            sign.setSignupTime(date);
+            sign.setIsSignup(1);
+            signService.signUpActive(sign);
+            LOGGER.info("报名成功");
+        }
         return Response.getInstance(CodeEnum.SUCCESS,"报名成功");
     }
 
@@ -91,6 +108,7 @@ public class SignController {
             LOGGER.info("签到失败，不存在此会议");
             return Response.getInstance(CodeEnum.FAIL,"请选择正确的会议");
         }
+
 
         //已报名的签到，修改签到状态
         if (list.contains(userId)){
