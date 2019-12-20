@@ -32,7 +32,7 @@ public interface ButlerSubordinatesServcie {
      * @Author: luyun
      * @Date: 2019/12/19 10:07
      */
-    ButlerUser selectParentInfoByid(int id);
+    ButlerUser selectParentInfoByid(Integer id);
 
     /**
      * 功能描述: <根据id查询用户信息>
