@@ -46,7 +46,7 @@ public class MeetingController {
                 LOGGER.info("鑫管家添加会议成功");
                 return Response.getInstance(CodeEnum.SUCCESS);
             }
-            LOGGER.error("鑫管家添加会议失败");
+            LOGGER.warn("鑫管家添加会议失败");
             return Response.getInstance(CodeEnum.FAIL);
         }
 
@@ -74,7 +74,7 @@ public class MeetingController {
                 LOGGER.info("管理员添加会议成功");
                 return Response.getInstance(CodeEnum.SUCCESS);
             }
-            LOGGER.error("管理员添加会议失败");
+            LOGGER.warn("管理员添加会议失败");
             return Response.getInstance(CodeEnum.FAIL);
         }
 
