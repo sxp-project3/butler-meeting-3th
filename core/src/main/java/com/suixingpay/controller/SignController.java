@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,6 +24,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
+/**
+ * @author 段思宇，黄宇萧
+ * @program: butler-meeting-3th
+ * @description: 报名、签到控制器
+ * @date 2019-12-18
+ */
 @RestController
 @RequestMapping("/user")
 @Slf4j
@@ -240,6 +246,71 @@ public class SignController {
 
         return Response.getInstance(CodeEnum.SUCCESS, map);
     }
+
+    @RequestMapping(value = "/selectSignIn",method = RequestMethod.POST)
+    public Response SignInInfo(@RequestBody Sign sign) {
+
+        LOGGER.info("接收的参数为[{},{}]", sign.getUserId(), sign.getMeetingId());
+
+        //接收前端参数
+        Integer userId = sign.getUserId();
+        Integer meetingId = sign.getMeetingId();
+
+        //定义一个Map用于装结果
+        Map<String, Object> map = new HashMap<>();
+
+        //接收用户id的参数判空
+        if (userId == null){
+            LOGGER.info("没有接收到用户id");
+            return Response.getInstance(CodeEnum.FAIL,"没有接收到用户id");
+        }
+
+        //接收会议id的参数判空
+        if (meetingId == null){
+            LOGGER.info("没有接收到会议id");
+            return Response.getInstance(CodeEnum.FAIL,"没有接收到会议id");
+        }
+
+        //通过会议id查询会议信息
+        Meeting meeting = meetingKjService.getOne(meetingId);
+
+        //判断当前会议id是否存在
+        if (meeting == null){
+            LOGGER.info("不存在的会议");
+            return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
+        }
+        map.put("Province", meeting.getPlaceCity());
+        map.put("city", meeting.getPlaceCounty());
+
+        //通过用户id查询报名信息
+        Sign sign1 = signService.selectWithOutIdAndUserId(sign);
+
+        //判断是否存在数据
+        if (sign1 == null){
+            LOGGER.info("不存在此签到信息");
+            return Response.getInstance(CodeEnum.FAIL,"不存在此签到信息");
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String str = sdf.format(sign1.getSigninTime());
+        map.put("SignInTime", str);
+        map.put("IsSignUp", sign1.getIsSignup());
+
+        //通过用户id查询用户信息
+        ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(userId);
+
+        //判断是否存在数据
+        if (butlerUser == null){
+            LOGGER.info("不存在该用户信息");
+            return Response.getInstance(CodeEnum.FAIL,"不存在该用户信息");
+        }
+        map.put("Code", butlerUser.getReferralCode());
+        map.put("userName", butlerUser.getName());
+        map.put("telePhone", butlerUser.getTelephone());
+
+
+        return Response.getInstance(CodeEnum.SUCCESS, map);
+    }
+
 
 //    @RequestMapping(value = "/test",method = RequestMethod.POST)
 //    public Sign test(){

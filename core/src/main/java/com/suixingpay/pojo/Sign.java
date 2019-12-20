@@ -5,6 +5,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
+
+/**
+ * @author 段思宇，黄宇萧
+ * @program: butler-meeting-3th
+ * @description: 报名、签到表
+ * @date 2019-12-18
+ */
 public class Sign {
     private Integer id;
 

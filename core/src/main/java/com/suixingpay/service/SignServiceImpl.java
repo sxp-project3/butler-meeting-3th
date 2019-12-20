@@ -10,6 +10,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author 段思宇，黄宇萧
+ * @program: butler-meeting-3th
+ * @description: 报名、签到服务
+ * @date 2019-12-18
+ */
 @Service
 public class SignServiceImpl implements SignService{
 
@@ -23,28 +29,6 @@ public class SignServiceImpl implements SignService{
     @Override
     public int signUpActive(Sign sign) {
 
-
-//        Integer userId = sign.getUserId();
-//        Integer meetingId = sign.getMeetingId();
-//
-//        //用户参数判空
-//        if (userId == null){
-//            LOGGER.info("报名失败，不存在此用户");
-//            return Response.getInstance(CodeEnum.FAIL,"请选择正确的用户");
-//        }
-//
-//        //会议参数判空
-//        if (meetingId == null){
-//            LOGGER.info("报名失败，不存在此会议");
-//            return Response.getInstance(CodeEnum.FAIL,"请选择正确的会议");
-//        }
-//
-//        sign.setUserId(userId);
-//        sign.setMeetingId(meetingId);
-//        sign.setSignupTime(new Date());
-//        sign.setIsSignup(1);
-//        signMapper.signUpActive(sign);
-//        LOGGER.info("报名成功");
         return signMapper.signUpActive(sign);
     }
 
