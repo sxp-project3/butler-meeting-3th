@@ -36,8 +36,7 @@ public class ButlerSubordinatesServiceImpl implements ButlerSubordinatesServcie{
     public List<ButlerUser> selectParentInfoBySubId(Integer id) {
         try {
            List<Integer> userId = butlerSubordinatesMapper.selectUserIdBySubId(id);
-
-            return butlerSubordinatesMapper.selectParentInfoBySubId(userId);
+           return butlerSubordinatesMapper.selectParentInfoBySubId(userId);
         }catch (Exception e){
             throw  new RuntimeException();
         }
@@ -51,7 +50,7 @@ public class ButlerSubordinatesServiceImpl implements ButlerSubordinatesServcie{
      * @Author: luyun
      * @Date: 2019/12/19 13:38
      */
-    public ButlerUser selectParentInfoByid(int id){
+    public ButlerUser selectParentInfoByid(Integer id){
         int ids=butlerSubordinatesMapper.selectLeaderByid(id);
         return butlerSubordinatesMapper.selectParentInfoByid(ids);
     }

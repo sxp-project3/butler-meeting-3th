@@ -32,7 +32,7 @@ public interface ButlerSubordinatesMapper {
      * @Author: luyun
      * @Date: 2019/12/19 11:06
      */
-    ButlerUser selectParentInfoByid(Integer id);
+    ButlerUser selectParentInfoByid(@Param("id") Integer id);
     /**
      * 功能描述: <根据id获取直接父类id>
      * 〈〉
@@ -41,7 +41,7 @@ public interface ButlerSubordinatesMapper {
      * @Author: luyun
      * @Date: 2019/12/19 11:08
      */
-    Integer selectLeaderByid(Integer id);
+    Integer selectLeaderByid(@Param("id") Integer id);
     /**
      * 功能描述: <根据用户id查询父类信息>
      * 〈〉
@@ -50,7 +50,7 @@ public interface ButlerSubordinatesMapper {
      * @Author: luyun
      * @Date: 2019/12/19 13:33
      */
-    List<ButlerUser> selectParentInfoBySubId(List<Integer> userId);
+    List<ButlerUser> selectParentInfoBySubId(@Param("userId") List<Integer> userId);
 
     /**
      * 功能描述: <根据id查询用户信息>
@@ -60,6 +60,6 @@ public interface ButlerSubordinatesMapper {
      * @Author: luyun
      * @Date: 2019/12/19 21:10
      */
-    ButlerUser selectByid(Integer id);
+    ButlerUser selectByid(@Param("id") Integer id);
 
 }
