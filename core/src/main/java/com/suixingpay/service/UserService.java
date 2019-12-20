@@ -26,6 +26,14 @@ public interface UserService {
     ButlerUserVO userLogIn(ButlerUser butlerUser);
 
     /**
+     * 根据用户 token 来注销当前 token 的用户
+     *
+     * @param token 用户 token
+     * @return 返回注销登录的用户全部
+     */
+    ButlerUserVO userLogOut(String token);
+
+    /**
      * 根据 token，返回一个用户实体，token 的有效性，通过 redis 缓存判断
      *
      * @param token 用户的 token
