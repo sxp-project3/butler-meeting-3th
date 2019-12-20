@@ -2,11 +2,13 @@ package com.suixingpay.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.suixingpay.handler.GlobalExceptionHandler;
 import com.suixingpay.pojo.ButlerUser;
 import com.suixingpay.vo.ButlerUserVO;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -19,7 +21,7 @@ import java.util.*;
  * @Date 2019/12/18 10:55
  * @Version 1.0
  **/
-
+@Slf4j
 public class TokenUtil {
     //token密钥
     public static  final String SECRET="JKKLJOoasdlfj";
@@ -30,11 +32,6 @@ public class TokenUtil {
     public  static  final  int calendarFiled= Calendar.DATE;
     public  static  final  int calendarInterval=10;
 
-    @Autowired
-    public static HttpServletRequest httpServletRequest;
-
-    @Autowired
-    private static GlobalExceptionHandler globalExceptionHandler;
     /**
      * 功能描述: <JWT 生成token>
      * 〈〉
@@ -109,8 +106,9 @@ public class TokenUtil {
              jwt=jwtVerifier.verify(token);
              jwt.getClaims();
         }catch (Exception e){
+            log.error(e.getMessage());
+            new JWTDecodeException("token值错误,请重新输入");
 
-            System.out.println("错误异常"+e);
         }
         Map<String, Object> map = new HashMap<>();
         int id=jwt.getClaims().get("id").asInt();
