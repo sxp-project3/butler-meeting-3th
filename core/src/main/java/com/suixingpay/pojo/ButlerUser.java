@@ -23,11 +23,11 @@ public class ButlerUser {
     private String telephone;
 
     @NotBlank(message = "用户账户不可为空！")
-    @Size(min = 0, max = 16, message = "用户账户的长度不可大于 16 个字符！")
+    @Size(min = 0, max = 16, message = "用户账户错误，长度不可大于 16 个字符！")
     private String account;
 
     @NotBlank(message = "用户密码不可为空！")
-    @Size(min = 0, max = 32, message = "用户密码的长度不可大于 32 个字符！")
+    @Size(min = 0, max = 32, message = "用户密码错误，长度不可大于 32 个字符！")
     private String password;
 
     private String rootUserId;

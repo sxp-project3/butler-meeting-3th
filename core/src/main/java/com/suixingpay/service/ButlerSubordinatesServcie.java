@@ -43,4 +43,22 @@ public interface ButlerSubordinatesServcie {
      * @Date: 2019/12/19 21:10
      */
     ButlerUser selectByid(Integer id);
+    /**
+     * 功能描述: <根据id查询所有父类id>
+     * 〈〉
+     * @Param: [id]
+     * @Return: java.util.List<java.lang.Integer>
+     * @Author: luyun
+     * @Date: 2019/12/20 11:11
+     */
+    List<Integer> selectUserIdBySubId(Integer id);
+    /**
+     * 功能描述: <根据id获取直接父类id>
+     * 〈〉
+     * @Param: [id]
+     * @Return: java.lang.Integer
+     * @Author: luyun
+     * @Date: 2019/12/20 11:22
+     */
+    Integer selectLeaderByid(Integer id);
 }
