@@ -320,7 +320,7 @@ public class SignController {
         //查询出当前会议的签到总人数
         int signInSum = signService.selectCountSignIn(meetingId);
 
-        log.info(meeting.getName()+"报名总人数"+signInSum);
+        log.info(meeting.getName()+"签到总人数"+signInSum);
         //判断当前会议id是否存在
         if (meeting == null){
             LOGGER.info("不存在的会议");
