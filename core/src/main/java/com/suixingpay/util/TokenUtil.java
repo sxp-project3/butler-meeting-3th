@@ -105,10 +105,10 @@ public class TokenUtil {
             JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(SECRET)).build();
              jwt=jwtVerifier.verify(token);
              jwt.getClaims();
-        }catch (Exception e){
-            throw new JWTDecodeException("token值错误");
-
-        }
+        }catch (JWTDecodeException e){
+            log.error("Token 值错误！");
+            return null;
+        } 
         Map<String, Object> map = new HashMap<>();
         int id=jwt.getClaims().get("id").asInt();
         String levelNum=jwt.getClaims().get("levelNum").asString();
