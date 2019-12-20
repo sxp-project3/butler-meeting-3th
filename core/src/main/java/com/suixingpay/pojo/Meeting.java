@@ -21,6 +21,8 @@ public class Meeting {
     private String type;
     //发起类型
     private String sponsorType;
+    //推荐码
+    private String referralCode;
     //是否收费
     @NotNull(message = "是否收费 为空！")
     private Integer ifFee;
@@ -201,5 +203,13 @@ public class Meeting {
 
     public void setSponsorType(String sponsorType) {
         this.sponsorType = sponsorType;
+    }
+
+    public String getReferralCode() {
+        return referralCode;
+    }
+
+    public void setReferralCode(String referralCode) {
+        this.referralCode = referralCode;
     }
 }

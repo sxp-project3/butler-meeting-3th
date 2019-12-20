@@ -4,6 +4,10 @@ import com.suixingpay.enumeration.CodeEnum;
 import com.suixingpay.pojo.Meeting;
 import com.suixingpay.response.Response;
 import com.suixingpay.service.MeetingService;
+import com.suixingpay.service.UserService;
+import com.suixingpay.util.HttpUtil;
+import com.suixingpay.util.TokenUtil;
+import com.suixingpay.vo.ButlerUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +24,10 @@ import java.util.Date;
 public class MeetingController {
     @Autowired
     private MeetingService meetingService;
-
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private HttpUtil httpUtil;
     //添加会议（v5级用户以上）
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Response add(@RequestBody @Validated Meeting meeting) {
@@ -44,7 +51,7 @@ public class MeetingController {
         //调用校验时间方法
         String checkTimeResult = checkTime(meeting);
         if (checkTimeResult.equals("时间正确")) {
-
+            String code = meeting.getReferralCode();
             meeting.setCreateUserId(0);
             //执行添加
             Integer result = meetingService.addMeeting(meeting);
@@ -96,8 +103,21 @@ public class MeetingController {
         meeting.setCreateTime(new Date());
         //前台获取会议时长
         meeting.setDuration(meeting.getDuration());
-        //假的用户id
-        meeting.setCreateUserId(1);
+        //从token中获取用户id
+        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
+        if(token==null||token==""){
+            return "未登录！";
+        }
+        ButlerUserVO userVO = userService.parseUser(token);
+        Integer userId = userVO.getId();
+        //获取当前用户等级
+        String levelNumString =userVO.getLevelNum();
+        Integer levelNum = Integer.parseInt(levelNumString);
+        //如果当前用户等级不够，不能操作添加，修改功能
+        if(levelNum<5){
+            return "该用户无此功能权限！";
+        }
+        meeting.setCreateUserId(userId);
         if ((signUpEndTime.after(startTime) || signUpEndTime.before(new Date()))) {
             return "会议报名截止时间选择不正确！";
         }
