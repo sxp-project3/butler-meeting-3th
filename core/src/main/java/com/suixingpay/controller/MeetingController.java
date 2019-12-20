@@ -8,6 +8,9 @@ import com.suixingpay.service.UserService;
 import com.suixingpay.util.HttpUtil;
 import com.suixingpay.util.TokenUtil;
 import com.suixingpay.vo.ButlerUserVO;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -21,13 +24,16 @@ import java.util.Date;
  */
 @RestController
 @RequestMapping("/meeting")
+@Slf4j
 public class MeetingController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MeetingController.class);
     @Autowired
     private MeetingService meetingService;
     @Autowired
     private UserService userService;
     @Autowired
     private HttpUtil httpUtil;
+
     //添加会议（v5级用户以上）
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Response add(@RequestBody @Validated Meeting meeting) {
@@ -37,8 +43,10 @@ public class MeetingController {
             //执行添加
             Integer result = meetingService.addMeeting(meeting);
             if (result == 1) {
+                LOGGER.info("鑫管家添加会议成功");
                 return Response.getInstance(CodeEnum.SUCCESS);
             }
+            LOGGER.error("鑫管家添加会议失败");
             return Response.getInstance(CodeEnum.FAIL);
         }
 
@@ -53,9 +61,9 @@ public class MeetingController {
         String checkTimeResult = checkTime(meeting);
         if (checkTimeResult.equals("时间正确")) {
             String code = meeting.getReferralCode();
-            Integer reCode=userService.getUserIdByReferCode(code);
+            Integer reCode = userService.getUserIdByReferCode(code);
             //如果推荐码不存在，那么用户id为空,将会议创建人id设为0
-            if(reCode==null){
+            if (reCode == null) {
                 meeting.setCreateUserId(0);
             }
             //如果推荐码存在，将会议创建人id设为推荐码人id
@@ -63,8 +71,10 @@ public class MeetingController {
             //执行添加
             Integer result = meetingService.addMeeting(meeting);
             if (result == 1) {
+                LOGGER.info("管理员添加会议成功");
                 return Response.getInstance(CodeEnum.SUCCESS);
             }
+            LOGGER.error("管理员添加会议失败");
             return Response.getInstance(CodeEnum.FAIL);
         }
 
@@ -82,6 +92,7 @@ public class MeetingController {
         if (checkTimeResult.equals("时间正确")) {
             Integer result = meetingService.updateMeetingById(meeting);
             if (result == 1) {
+                LOGGER.info("修改会议成功");
                 return Response.getInstance(CodeEnum.SUCCESS);
             }
             return Response.getInstance(CodeEnum.FAIL);
@@ -98,6 +109,7 @@ public class MeetingController {
             return Response.getInstance(CodeEnum.FAIL, "参数为空");
         }
         meetingService.updateStatusById(id, statusNumber);
+        LOGGER.info("审批成功");
         return Response.getInstance(CodeEnum.SUCCESS);
     }
 
@@ -113,20 +125,21 @@ public class MeetingController {
         //前台获取会议时长
         meeting.setDuration(meeting.getDuration());
         //从token中获取用户id
-//        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
-//        if(token==null||token==""){
-//            return "未登录！";
-//        }
-//        ButlerUserVO userVO = userService.parseUser(token);
-//        Integer userId = userVO.getId();
-//        //获取当前用户等级
-//        String levelNumString =userVO.getLevelNum();
-//        Integer levelNum = Integer.parseInt(levelNumString);
-//        //如果当前用户等级不够，不能操作添加，修改功能
-//        if(levelNum<5){
-//            return "该用户无此功能权限！";
-//        }
-        Integer userId=1;
+        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
+        if (token == null || token == "") {
+            return "未登录！";
+        }
+        ButlerUserVO userVO = userService.parseUser(token);
+        //获取当前登录用户id
+        Integer userId = userVO.getId();
+        //获取当前用户等级
+        String levelNumString = userVO.getLevelNum();
+        Integer levelNum = Integer.parseInt(levelNumString);
+        //如果当前用户等级不够，不能操作添加，修改功能
+        if (levelNum < 5) {
+            return "该用户无此功能权限！";
+        }
+        //Integer userId=1;
         meeting.setCreateUserId(userId);
         if ((signUpEndTime.after(startTime) || signUpEndTime.before(new Date()))) {
             return "会议报名截止时间选择不正确！";
@@ -136,5 +149,4 @@ public class MeetingController {
         }
         return "时间正确";
     }
-
 }
