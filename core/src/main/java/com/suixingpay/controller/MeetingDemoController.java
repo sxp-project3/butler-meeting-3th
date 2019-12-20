@@ -7,6 +7,7 @@ import com.suixingpay.pojo.Meeting;
 import com.suixingpay.response.Response;
 import com.suixingpay.service.ButlerSubordinatesServcie;
 import com.suixingpay.service.MeetingKjService;
+import com.suixingpay.service.SignService;
 import com.suixingpay.service.UserService;
 import com.suixingpay.util.HttpUtil;
 import com.suixingpay.util.TokenUtil;
@@ -38,7 +39,7 @@ public class MeetingDemoController {
     private UserService userService;
 
     @Autowired
-    private ButlerSubordinatesServcie butlerSubordinatesServcie;
+    private SignService signService;
 
     @RequestMapping(value = "/validMeetings", method = RequestMethod.GET)
     public Response validMeeting(@RequestParam(value="pageNum", required = false) String pageNumString,
@@ -46,10 +47,7 @@ public class MeetingDemoController {
         String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
         ButlerUserVO userVO = userService.parseUser(token);
         log.info("userID:"+userVO.getId());
-        List<Integer> createUserIds = butlerSubordinatesServcie.selectUserIdBySubId(userVO.getId());
-        log.info("createUserIds:"+createUserIds);
-         Integer userId = userVO.getId();
-        // Integer userId = 10001;
+        Integer userId = userVO.getId();
         Integer pageNum = Integer.parseInt(pageNumString);
         Integer pageSize = Integer.parseInt(pageSizeString);
         PageHelper.startPage(pageNum, pageSize);
@@ -63,12 +61,19 @@ public class MeetingDemoController {
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public Response detail(@RequestParam(value = "id") String meetingIdString) {
         // 这里尚未完成，需要验证用户身份
-        Integer userId = 10001; // 模拟用户id
+        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
+        ButlerUserVO userVO = userService.parseUser(token);
+        // log.info("userID:"+userVO.getId());
+        // Integer userId = 10001; // 模拟用户id
+        Integer userId = userVO.getId();
 
         Integer meetingId = Integer.parseInt(meetingIdString);
         Meeting meeting = meetingKjService.getOne(meetingId);
         Map<String, Object> result = new HashMap<>();
         result.put("meeting", meeting);
+
+        int hasSignUp = signService.selectCountSignIn(userId);
+        result.put("hasSignUp", hasSignUp);
         Response<Map<String, HashMap>> response = Response.getInstance(CodeEnum.SUCCESS, result);
 
         return response;
@@ -78,14 +83,14 @@ public class MeetingDemoController {
     public Response getMyCreateList(@RequestParam(value="pageNum", required = false) String pageNumString,
                                     @RequestParam(value="pageSize", required = false) String pageSizeString) {
         // 这里尚未完成，需要验证用户身份
-        Integer userId = 10001; // 模拟用户id
-
-        log.info(pageNumString);
-        log.info(pageSizeString);
+        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
+        ButlerUserVO userVO = userService.parseUser(token);
+        Integer userId = userVO.getId(); // 模拟用户id
+        // log.info("userID:"+userId);
         Integer pageNum = Integer.parseInt(pageNumString);
         Integer pageSize = Integer.parseInt(pageSizeString);
         PageHelper.startPage(pageNum, pageSize);
-        List<Meeting> meetings = meetingKjService.getValidMeeting(userId);
+        List<Meeting> meetings = meetingKjService.getMyMeetings(userId);
         PageInfo<Meeting> page = new PageInfo<>(meetings);
         Response<Map<String, HashMap>> response = Response.getInstance(CodeEnum.SUCCESS, page);
 

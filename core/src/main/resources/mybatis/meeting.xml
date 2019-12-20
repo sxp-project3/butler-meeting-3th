@@ -169,7 +169,7 @@
         select
         <include refid="Active_Column_List"/>
         from meeting
-        where create_user_id=#{userId};
+        where create_user_id=#{userId}
     </select>
 
 <!--    ${params.nickname}这种写法参数默认是传字符串，-->
@@ -200,6 +200,9 @@
         </if>
         <if test="type!=null and type!=''">
             and `type`=#{type}
+        </if>
+        <if test="placeProvince!=null and placeProvince=''">
+            and place_province=#{placeProvince};
         </if>
 
     </select>

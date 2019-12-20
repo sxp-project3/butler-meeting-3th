@@ -19,5 +19,5 @@ public interface MeetingKjService {
 
     List<Meeting> getMyMeetings(Integer userId);
 
-    List<Meeting>  searchMeeting(SearchMeetingParamVo searchMeetingParamVo);
+    List<Meeting> searchMeeting(SearchMeetingParamVo searchMeetingParamVo);
 }
