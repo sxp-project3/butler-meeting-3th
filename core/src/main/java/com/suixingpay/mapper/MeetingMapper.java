@@ -36,5 +36,8 @@ public interface MeetingMapper {
 
     List<Meeting> paramSearchList(@Param("params") Map<String, Object> params);
 
+    //待审批，同意，驳回修改会议审批状态
+    Integer updateStatusById(@Param("id") Integer id, @Param("status") Integer status);
+
     List<Meeting> paramSearchList2(SearchMeetingParamVo searchMeetingParamVo);
 }
