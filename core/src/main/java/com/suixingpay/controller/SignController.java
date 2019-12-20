@@ -352,6 +352,10 @@ public class SignController {
                 String str = sdf.format(sign1.getSigninTime());
                 map.put("SignInTime", str);
                 map.put("IsSignUp", sign1.getIsSignup());
+                if (sign1.getIsSignup() == 1){
+                    String SignUpTime = sdf.format(sign1.getSignupTime());
+                    map.put("SignUpTime", SignUpTime);
+                }
 
                 //通过用户id查询用户信息
                 ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(sign.getUserId());
