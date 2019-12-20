@@ -26,7 +26,7 @@ public class Utils {
      * @Author: luyun
      * @Date: 2019/12/18 12:03
      */
-    public  boolean isBlank(String str) {
+    public  static boolean isBlank(String str) {
         int strLen;
         if (str != null && (strLen = str.length()) != 0) {
             for(int i = 0; i < strLen; ++i) {
@@ -41,20 +41,6 @@ public class Utils {
 
         }
     }
-    /**
-     * 功能描述: <根据token获取token值>
-     * 〈〉
-     * @Param: [tokenName]
-     * @Return: java.lang.String
-     * @Author: luyun
-     * @Date: 2019/12/18 12:05
-     */
-    public   String getToken(String tokenName){
-        String token=httpServletRequest.getHeader(tokenName);
-        if (tokenName==null){
-            new RuntimeException("token为空，请登录");
-        }
-        return token;
-    }
+
 
 }
