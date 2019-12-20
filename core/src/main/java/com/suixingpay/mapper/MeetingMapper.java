@@ -1,6 +1,7 @@
 package com.suixingpay.mapper;
 
 import com.suixingpay.pojo.Meeting;
+import com.suixingpay.vo.SearchMeetingParamVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.jute.compiler.JString;
@@ -34,4 +35,6 @@ public interface MeetingMapper {
     List<Meeting> getMyCreateList(@Param("userId") Integer userId);
 
     List<Meeting> paramSearchList(@Param("params") Map<String, Object> params);
+
+    List<Meeting> paramSearchList2(SearchMeetingParamVo searchMeetingParamVo);
 }

@@ -23,9 +23,9 @@ public interface ButlerSubordinatesMapper {
      * @Author: luyun
      * @Date: 2019/12/18 17:52
      */
-    Integer selectUserIdBySubId(@Param("id") Integer id);
+    List<Integer> selectUserIdBySubId(@Param("id") Integer id);
     /**
-     * 功能描述: <根据id查询直接父类id>
+     * 功能描述: <根据id查询直接父类信息>
      * 〈〉
      * @Param: [id]
      * @Return: com.suixingpay.pojo.ButlerSubordinates
@@ -34,7 +34,7 @@ public interface ButlerSubordinatesMapper {
      */
     ButlerUser selectParentInfoByid(Integer id);
     /**
-     * 功能描述: <根据id获取父类id>
+     * 功能描述: <根据id获取直接父类id>
      * 〈〉
      * @Param: [id]
      * @Return: java.lang.Integer
@@ -50,7 +50,7 @@ public interface ButlerSubordinatesMapper {
      * @Author: luyun
      * @Date: 2019/12/19 13:33
      */
-    List<ButlerUser> selectParentInfoBySubId(Integer id);
+    List<ButlerUser> selectParentInfoBySubId(List<Integer> userId);
 
     /**
      * 功能描述: <根据id查询用户信息>

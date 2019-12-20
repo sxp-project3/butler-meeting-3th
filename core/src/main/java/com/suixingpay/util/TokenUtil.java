@@ -24,6 +24,8 @@ public class TokenUtil {
     //token密钥
     public static  final String SECRET="JKKLJOoasdlfj";
 
+    public static final String TOKEN_NAME = "auth_token";
+
     //token 过期时间
     public  static  final  int calendarFiled= Calendar.DATE;
     public  static  final  int calendarInterval=10;
@@ -107,8 +109,8 @@ public class TokenUtil {
              jwt=jwtVerifier.verify(token);
              jwt.getClaims();
         }catch (Exception e){
-            e.printStackTrace();
-            throw  new RuntimeException("token值错误");
+
+            System.out.println("错误异常"+e);
         }
         Map<String, Object> map = new HashMap<>();
         int id=jwt.getClaims().get("id").asInt();

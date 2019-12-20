@@ -185,8 +185,21 @@
         <if test="params.ifFee!=null and params.ifFee!=''">
             and if_fee=#{params.ifFee}
         </if>
-        <if test="params.place!=null and params.place!=''">
-            and place like concat('%', #{params.place}, '%')
+
+    </select>
+    <select id="paramSearchList2" parameterType="com.suixingpay.vo.SearchMeetingParamVo" resultMap="BaseResultMap">
+        select
+        <include refid="Active_Column_List"/>
+        from meeting
+        where 1=1
+        <if test="(ifFee!=null and ifFee!='') or ifFee==0">
+            and if_fee=#{ifFee}
+        </if>
+        <if test="(status!=null and status!='') or status==0">
+            and status=#{status}
+        </if>
+        <if test="type!=null and type!=''">
+            and `type`=#{type}
         </if>
 
     </select>

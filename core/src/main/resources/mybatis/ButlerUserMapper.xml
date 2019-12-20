@@ -1,37 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.suixingpay.mapper.ButlerUserMapper" >
-  <resultMap id="BaseResultMap" type="com.suixingpay.pojo.ButlerUser" >
-    <id column="id" property="id" jdbcType="INTEGER" />
-    <result column="name" property="name" jdbcType="VARCHAR" />
-    <result column="telephone" property="telephone" jdbcType="VARCHAR" />
-    <result column="account" property="account" jdbcType="VARCHAR" />
-    <result column="password" property="password" jdbcType="VARCHAR" />
-    <result column="root_user_id" property="rootUserId" jdbcType="VARCHAR" />
-    <result column="leader_id" property="leaderId" jdbcType="VARCHAR" />
-    <result column="referral_code" property="referralCode" jdbcType="VARCHAR" />
-    <result column="level_num" property="levelNum" jdbcType="CHAR" />
-    <result column="province" property="province" jdbcType="VARCHAR" />
-    <result column="city" property="city" jdbcType="VARCHAR" />
-    <result column="role" property="role" jdbcType="VARCHAR" />
-    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
-    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
-    <result column="is_delete" property="isDelete" jdbcType="CHAR" />
-  </resultMap>
+<mapper namespace="com.suixingpay.mapper.ButlerUserMapper">
+    <resultMap id="BaseResultMap" type="com.suixingpay.pojo.ButlerUser">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="telephone" property="telephone" jdbcType="VARCHAR"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="root_user_id" property="rootUserId" jdbcType="VARCHAR"/>
+        <result column="leader_id" property="leaderId" jdbcType="VARCHAR"/>
+        <result column="referral_code" property="referralCode" jdbcType="VARCHAR"/>
+        <result column="level_num" property="levelNum" jdbcType="CHAR"/>
+        <result column="province" property="province" jdbcType="VARCHAR"/>
+        <result column="city" property="city" jdbcType="VARCHAR"/>
+        <result column="role" property="role" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_delete" property="isDelete" jdbcType="CHAR"/>
+    </resultMap>
 
-  <sql id="Base_Column_List" >
+    <sql id="Base_Column_List">
     id, name, telephone, account, password, root_user_id, leader_id, referral_code, level_num,
     province, city, role, create_time, update_time, is_delete
   </sql>
 
-  <select id="selectUserAnyCondition" resultType="com.suixingpay.pojo.ButlerUser">
-    select
-    <include refid="Base_Column_List"></include>
-    from butler_user
-    where 1 = 1
-    and account = #{account}
-    and password = #{password}
-  </select>
 
+    <!--    account & password 控制层已经做了校验   -->
+    <!--    referralCode 服务层已做校验  -->
+    <select id="selectUserAnyCondition" resultType="com.suixingpay.pojo.ButlerUser">
+        select
+        <include refid="Base_Column_List" />
+        from butler_user
+        where 1 = 1
+        <if test="id != null">
+            and id = #{id}
+        </if>
+        <if test="name != null and name != ''">
+            and name = #{name,jdbcType=VARCHAR}
+        </if>
+        <if test="telephone != null and telephone != ''">
+            and telephone = #{telephone,jdbcType=VARCHAR}
+        </if>
+        <if test="account != null">
+            and account = #{account,jdbcType=VARCHAR}
+        </if>
+        <if test="password != null">
+            and password = #{password,jdbcType=VARCHAR}
+        </if>
+        <if test="rootUserId != null and rootUserId != ''">
+            and root_user_id = #{rootUserId,jdbcType=VARCHAR}
+        </if>
+        <if test="leaderId != null and leaderId !=''">
+            and leader_id = #{leaderId,jdbcType=VARCHAR}
+        </if>
+        <if test="referralCode != null">
+            and referral_code = #{referralCode,jdbcType=VARCHAR}
+        </if>
+        <if test="levelNum != null and levelNum != ''">
+            and level_num = #{levelNum,jdbcType=CHAR}
+        </if>
+        <if test="province != null and province != ''">
+            and province = #{province,jdbcType=VARCHAR}
+        </if>
+        <if test="city != null and city != ''">
+            and city = #{city,jdbcType=VARCHAR}
+        </if>
+        <if test="role != null and role != ''">
+            and role = #{role,jdbcType=VARCHAR}
+        </if>
+    </select>
 
 </mapper>
