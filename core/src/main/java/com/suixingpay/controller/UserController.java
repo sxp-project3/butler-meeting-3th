@@ -53,7 +53,30 @@ public class UserController {
             return Response.getInstance(CodeEnum.FAIL, "传入的 token 为空！");
         } else {
             String parseResult = userService.isUserLogin(token);
-            return Response.getInstance(CodeEnum.SUCCESS, parseResult);
+            if (parseResult == null) {
+                // 返回错误状态，查不到响应的登录信息
+                return Response.getInstance(CodeEnum.FAIL, null);
+            } else {
+                // 返回成功状态，查到了用户的 token 创建时间
+                return Response.getInstance(CodeEnum.SUCCESS, parseResult);
+            }
+        }
+    }
+
+    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    public Response logOut() {
+
+        // TODO: 2019/12/20 待完成的用户注销服务
+
+        // 取得当前已经登录的用户 token
+        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
+
+        if (token == null) {
+            return Response.getInstance(CodeEnum.FAIL, "当前 token 为空");
+        } else {
+            ButlerUserVO butlerUserVO = userService.userLogOut(token);
+            String successMsg = butlerUserVO.getAccount() + ":" + "log out!";
+            return Response.getInstance(CodeEnum.SUCCESS, successMsg);
         }
 
     }
