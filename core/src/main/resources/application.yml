@@ -19,10 +19,23 @@ spring:
   profiles:
     active: dev
 
-  # MySQL 配置
+  # MySQL 配置 - zwl
   datasource:
     platform: mysql
     url: jdbc:mysql://172.16.41.67:3306/butler_zwl?useUnicode=true&characterEncoding=UTF-8&useSSL=false
     username: team3member
     password: team3team3
     driver-class-name: com.mysql.jdbc.Driver
+
+  # redis 配置 - zwl
+  redis:
+    host: 172.16.41.67
+    port: 6379
+    pool:
+      max-wait: 1500
+      max-active: 2048
+      minIdle: 20
+      maxIdle: 200
+    database: 0
+    timeout: 0
+
