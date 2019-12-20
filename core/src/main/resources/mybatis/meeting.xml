@@ -198,6 +198,9 @@
         <if test="(status!=null and status!='') or status==0">
             and status=#{status}
         </if>
+        <if test="type!=null and type!=''">
+            and `type`=#{type}
+        </if>
 
     </select>
     <!--    动态 SQL : 修改会议信息 -->

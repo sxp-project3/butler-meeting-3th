@@ -63,6 +63,8 @@ public class MeetingDemoController {
         // 这里尚未完成，需要验证用户身份
         Integer userId = 10001; // 模拟用户id
 
+        log.info(pageNumString);
+        log.info(pageSizeString);
         Integer pageNum = Integer.parseInt(pageNumString);
         Integer pageSize = Integer.parseInt(pageSizeString);
         PageHelper.startPage(pageNum, pageSize);

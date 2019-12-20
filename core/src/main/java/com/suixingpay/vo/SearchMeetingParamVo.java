@@ -27,8 +27,8 @@ public class SearchMeetingParamVo {
 //    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date starttimeEnd;
 
-    // 所属分公司（地点）
-    private String place;
+    // 所属分公司（地点省）
+    private String placeProvince;
 
     // 会议类型
     private String type;
@@ -44,6 +44,14 @@ public class SearchMeetingParamVo {
 
     // 创建用户id
     private Integer createUserId;
+
+    public String getPlaceProvince() {
+        return placeProvince;
+    }
+
+    public void setPlaceProvince(String placeProvince) {
+        this.placeProvince = placeProvince;
+    }
 
     public Integer getPageNum() {
         return pageNum;
@@ -104,14 +112,6 @@ public class SearchMeetingParamVo {
 
     public void setStarttimeEnd(Date starttimeEnd) {
         this.starttimeEnd = starttimeEnd;
-    }
-
-    public String getPlace() {
-        return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
     }
 
     public String getType() {
