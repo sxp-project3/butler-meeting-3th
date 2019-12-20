@@ -12,4 +12,6 @@ public interface MeetingService {
     Integer addMeeting(Meeting Meeting);
     //根据会议id修改会议信息
     Integer updateMeetingById(Meeting Meeting);
+    //根据会议id修改会议信息
+    void updateStatusById(Integer id,Integer status);
 }
