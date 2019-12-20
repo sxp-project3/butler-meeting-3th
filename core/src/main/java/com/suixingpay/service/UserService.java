@@ -45,7 +45,7 @@ public interface UserService {
      * 根据推荐码查出用户 id
      *
      * @param referralCode 推荐码
-     * @return 如果为空，则返回
+     * @return 如果为空，则返回 null ，不为空则返回对应的用户 id
      */
     Integer getUserIdByReferCode(@NotBlank(message = "推荐码不可为空！") String referralCode);
 }
