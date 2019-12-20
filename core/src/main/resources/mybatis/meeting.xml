@@ -5,6 +5,7 @@
     <resultMap id="BaseResultMap" type="com.suixingpay.pojo.Meeting">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="sponsor_type" jdbcType="VARCHAR" property="sponsorType" />
         <result column="if_fee" jdbcType="INTEGER" property="ifFee" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="host" jdbcType="VARCHAR" property="host" />
@@ -26,6 +27,7 @@
         id
         ,
         type,
+        sponsor_type,
         if_fee,
         name,
         host,
@@ -51,6 +53,9 @@
             </if>
             <if test="type != null and type !=''">
                 type,
+            </if>
+            <if test="sponsorType != null and sponsorType !=''">
+                sponsor_type,
             </if>
             <if test="ifFee != null">
                 if_fee,
@@ -101,6 +106,9 @@
             </if>
             <if test="type != null and type !=''">
                 #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="sponsorType != null and sponsorType !=''">
+                #{sponsorType,jdbcType=VARCHAR},
             </if>
             <if test="ifFee != null">
                 #{ifFee,jdbcType=INTEGER},
@@ -213,6 +221,9 @@
             <if test="type != null and type !=''">
                 type = #{type,jdbcType=VARCHAR},
             </if>
+            <if test="sponsorType != null and sponsorType !=''">
+                type = #{sponsorType,jdbcType=VARCHAR},
+            </if>
             <if test="ifFee != null">
                 if_fee = #{ifFee,jdbcType=INTEGER},
             </if>
@@ -254,5 +265,12 @@
             </if>
         </set>
         where id = #{id, jdbcType=INTEGER}
+    </update>
+<!--待审批，同意，驳回修改状态-->
+    <update id="updateStatusById" parameterType="int">
+        update meeting
+        set
+            status = #{status,jdbcType=INTEGER}
+        where `id` = #{id,jdbcType=INTEGER}
     </update>
 </mapper>

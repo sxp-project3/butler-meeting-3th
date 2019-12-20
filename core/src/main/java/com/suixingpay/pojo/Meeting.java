@@ -1,6 +1,7 @@
 package com.suixingpay.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -19,10 +20,15 @@ public class Meeting {
     //会议类型
     @NotBlank(message = "会议类型 为空！")
     private String type;
+    //发起类型
+    private String sponsorType;
+    //推荐码
+    private String referralCode;
     //是否收费
     @NotNull(message = "是否收费 为空！")
     private Integer ifFee;
     //会议名称
+    @Length(min=0,max=13)
     @NotBlank(message = "会议名称为空！")
     private String name;
     //主办方
@@ -51,6 +57,7 @@ public class Meeting {
     @NotBlank(message = "详细地址为空！")
     private String detailAddress;
     //会议描述
+    @Length(min=0,max=200)
     @NotBlank(message = "会议描述为空！")
     private String description;
     //会议当前状态
@@ -191,5 +198,21 @@ public class Meeting {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getSponsorType() {
+        return sponsorType;
+    }
+
+    public void setSponsorType(String sponsorType) {
+        this.sponsorType = sponsorType;
+    }
+
+    public String getReferralCode() {
+        return referralCode;
+    }
+
+    public void setReferralCode(String referralCode) {
+        this.referralCode = referralCode;
     }
 }

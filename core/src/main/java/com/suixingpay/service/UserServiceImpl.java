@@ -97,6 +97,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ButlerUserVO userLogOut(String token) {
+        return null;
+    }
+
+    @Override
     public ButlerUserVO parseUser(String token) {
 
         if (token == null) {

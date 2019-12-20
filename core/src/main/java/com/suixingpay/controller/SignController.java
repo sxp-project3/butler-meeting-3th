@@ -9,6 +9,11 @@ import com.suixingpay.service.ButlerSubordinatesServcie;
 import com.suixingpay.service.MeetingKjService;
 import com.suixingpay.service.SignService;
 
+import com.suixingpay.service.UserService;
+import com.suixingpay.util.HttpUtil;
+import com.suixingpay.util.TokenUtil;
+import com.suixingpay.util.Utils;
+import com.suixingpay.vo.ButlerUserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -36,6 +38,7 @@ import java.util.Map;
 @Slf4j
 public class SignController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SignController.class);
+
     @Autowired
     private SignService signService;
 
@@ -45,15 +48,28 @@ public class SignController {
     @Autowired
     private ButlerSubordinatesServcie butlerSubordinatesServcie;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private HttpUtil httpUtil;
+
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public Response signUpActive(@RequestBody Sign sign) {
         //接参
-        LOGGER.info("接收的参数为[{},{}]", sign.getUserId(), sign.getMeetingId());
+        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
+        ButlerUserVO userVO = userService.parseUser(token);
+
+        //通过token传入的参数会议id
+        Integer userID = userVO.getId();
+        sign.setUserId(userID);
+
+        LOGGER.info("报名功能接收的参数为[{},{}]", userVO.getId(), sign.getMeetingId());
 
         //查询出当前会议下所有用户id用作报名判断
         List<Integer> list = signService.selectIdByMeeting(sign);
 
-        //接收前端传入的参数 用户id，会议id
+        //接收前端传入的参数会议id
         Integer userId = sign.getUserId();
         Integer meetingId = sign.getMeetingId();
         Date date = new Date();
@@ -80,6 +96,13 @@ public class SignController {
             return Response.getInstance(CodeEnum.FAIL, "已过报名时间");
         }
 
+        //判断是否存在此用户
+        ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(userId);
+        if (butlerUser == null){
+            LOGGER.info("不存在此用户，无法支持报名");
+            return Response.getInstance(CodeEnum.FAIL, "不存在此用户，无法报名");
+        }
+
         //判断是否已经报名会议
         if (list.contains(userId)) {
             LOGGER.info("已报名，不可重复报名");
@@ -102,14 +125,20 @@ public class SignController {
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
     public Response selectIdByMeeting(@RequestBody Sign sign) {
 
-
         //接参
-        LOGGER.info("接收的参数为[{},{}]", sign.getUserId(), sign.getMeetingId());
+        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
+        ButlerUserVO userVO = userService.parseUser(token);
 
-        //查询出当前会议下所有用户用作签到判断
+        //通过token传入的参数会议id
+        Integer userID = userVO.getId();
+        sign.setUserId(userID);
+
+        LOGGER.info("报名功能接收的参数为[{},{}]", userVO.getId(), sign.getMeetingId());
+
+        //查询出当前会议下所有用户id用作报名判断
         List<Integer> list = signService.selectIdByMeeting(sign);
 
-        //接收当前签到的用户id和活动id
+        //接收前端传入的参数会议id
         Integer userId = sign.getUserId();
         Integer meetingId = sign.getMeetingId();
         Date date = new Date();
@@ -131,6 +160,13 @@ public class SignController {
         if (meeting == null) {
             LOGGER.info("不存在此会议，无法签到");
             return Response.getInstance(CodeEnum.FAIL, "不存在此会议，无法签到");
+        }
+
+        //判断是否存在此用户
+        ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(userId);
+        if (butlerUser == null){
+            LOGGER.info("不存在此用户，无法支持签到");
+            return Response.getInstance(CodeEnum.FAIL, "不存在此用户，无法签到");
         }
 
         //获取会议开始时间
@@ -186,20 +222,15 @@ public class SignController {
     @RequestMapping(value = "/selectSignUp", method = RequestMethod.POST)
     public Response SignUpInfo(@RequestBody Sign sign) {
 
-        LOGGER.info("接收的参数为[{},{}]", sign.getUserId(), sign.getMeetingId());
+        LOGGER.info("报名信息接口接收的参数为[{}]", sign.getMeetingId());
 
         //接收前端参数
-        Integer userId = sign.getUserId();
         Integer meetingId = sign.getMeetingId();
 
         //定义一个Map用于装结果
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> meetingMap = new HashMap<>();
+        List<Map<String, Object>> list1 = new ArrayList<>();
 
-        //接收用户id的参数判空
-        if (userId == null){
-            LOGGER.info("没有接收到用户id");
-            return Response.getInstance(CodeEnum.FAIL,"没有接收到用户id");
-        }
 
         //接收会议id的参数判空
         if (meetingId == null){
@@ -210,60 +241,72 @@ public class SignController {
         //通过会议id查询会议信息
         Meeting meeting = meetingKjService.getOne(meetingId);
 
+        //查询出当前会议的报名总人数
+        int signUpSum = signService.selectCountSignUp(meetingId);
+
+        log.info(meeting.getName()+"报名总人数"+signUpSum);
+
         //判断当前会议id是否存在
         if (meeting == null){
             LOGGER.info("不存在的会议");
             return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
         }
-        map.put("Province", meeting.getPlaceCity());
-        map.put("city", meeting.getPlaceCounty());
+        meetingMap.put("signUpSum", signUpSum);
+        meetingMap.put("Province", meeting.getPlaceCity());
+        meetingMap.put("city", meeting.getPlaceCounty());
 
-        //通过用户id查询报名信息
-        Sign sign1 = signService.selectWithOutIdAndUserId(sign);
+        //通过会议id查询出当前会议下的所有用户id
+        List<Integer> list = signService.selectIdByMeeting(sign);
 
-        //判断是否存在数据
-        if (sign1 == null){
-            LOGGER.info("不存在此报名信息");
-            return Response.getInstance(CodeEnum.FAIL,"不存在此报名信息");
+        //判断当前会议有没有用户报名
+        if (list.size() == 0){
+            //给前端提示当前会议没有任何报名
+            meetingMap.put("signUpCount", 0);
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String str = sdf.format(sign1.getSignupTime());
-        map.put("SignUpTime", str);
-        map.put("IsSignIn", sign1.getIsSignin());
+        for (int i = 0;i < list.size();i++){
 
-        //通过用户id查询用户信息
-        ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(userId);
+            Map<String, Object> map = new HashMap<>();
+            //每一次获取到一个用户id去查询
+            sign.setUserId(list.get(i));
 
-        //判断是否存在数据
-        if (butlerUser == null){
-            LOGGER.info("不存在该用户信息");
-            return Response.getInstance(CodeEnum.FAIL,"不存在该用户信息");
+            //通过用户id查询出报名、签到信息
+            Sign sign1 = signService.selectWithOutIdAndUserId(sign);
+
+            //判断已报名，才有报名时间
+            if (sign1.getIsSignup() ==1){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String str = sdf.format(sign1.getSignupTime());
+                map.put("SignUpTime", str);
+                map.put("IsSignIn", sign1.getIsSignin());
+
+
+                //通过用户id查询用户信息
+                ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(sign.getUserId());
+
+                //装结果准备返回
+                map.put("Code", butlerUser.getReferralCode());
+                map.put("userName", butlerUser.getName());
+                map.put("telePhone", butlerUser.getTelephone());
+
+                list1.add(map);
+            }
         }
-        map.put("Code", butlerUser.getReferralCode());
-        map.put("userName", butlerUser.getName());
-        map.put("telePhone", butlerUser.getTelephone());
-
-
-        return Response.getInstance(CodeEnum.SUCCESS, map);
+        list1.add(meetingMap);
+        return Response.getInstance(CodeEnum.SUCCESS, list1);
     }
 
     @RequestMapping(value = "/selectSignIn",method = RequestMethod.POST)
     public Response SignInInfo(@RequestBody Sign sign) {
 
-        LOGGER.info("接收的参数为[{},{}]", sign.getUserId(), sign.getMeetingId());
+        LOGGER.info("签到信息接口接收的参数为[{}]", sign.getMeetingId());
 
         //接收前端参数
-        Integer userId = sign.getUserId();
         Integer meetingId = sign.getMeetingId();
 
         //定义一个Map用于装结果
-        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> meetingMap = new HashMap<>();
+        List<Map<String, Object>> list1 = new ArrayList<>();
 
-        //接收用户id的参数判空
-        if (userId == null){
-            LOGGER.info("没有接收到用户id");
-            return Response.getInstance(CodeEnum.FAIL,"没有接收到用户id");
-        }
 
         //接收会议id的参数判空
         if (meetingId == null){
@@ -274,41 +317,59 @@ public class SignController {
         //通过会议id查询会议信息
         Meeting meeting = meetingKjService.getOne(meetingId);
 
+        //查询出当前会议的签到总人数
+        int signInSum = signService.selectCountSignIn(meetingId);
+
+        log.info(meeting.getName()+"签到总人数"+signInSum);
         //判断当前会议id是否存在
         if (meeting == null){
             LOGGER.info("不存在的会议");
             return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
         }
-        map.put("Province", meeting.getPlaceCity());
-        map.put("city", meeting.getPlaceCounty());
+        meetingMap.put("Province", meeting.getPlaceCity());
+        meetingMap.put("city", meeting.getPlaceCounty());
+        meetingMap.put("signInSum", signInSum);
 
-        //通过用户id查询报名信息
-        Sign sign1 = signService.selectWithOutIdAndUserId(sign);
+        //通过会议id查询出当前会议下的所有用户id
+        List<Integer> list = signService.selectIdByMeeting(sign);
 
-        //判断是否存在数据
-        if (sign1 == null){
-            LOGGER.info("不存在此签到信息");
-            return Response.getInstance(CodeEnum.FAIL,"不存在此签到信息");
+        //判断当前会议有没有用户签到
+        if (list.size() == 0){
+            meetingMap.put("signInCount", 0);
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String str = sdf.format(sign1.getSigninTime());
-        map.put("SignInTime", str);
-        map.put("IsSignUp", sign1.getIsSignup());
+        for (int i = 0;i < list.size();i++){
 
-        //通过用户id查询用户信息
-        ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(userId);
+            Map<String, Object> map = new HashMap<>();
+            //每一次获取到一个用户id去查询
+            sign.setUserId(list.get(i));
 
-        //判断是否存在数据
-        if (butlerUser == null){
-            LOGGER.info("不存在该用户信息");
-            return Response.getInstance(CodeEnum.FAIL,"不存在该用户信息");
+            //通过用户id查询出报名、签到信息
+            Sign sign1 = signService.selectWithOutIdAndUserId(sign);
+
+            //判断已签到，才有签到时间
+            if (sign1.getIsSignin() == 1){
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                String str = sdf.format(sign1.getSigninTime());
+                map.put("SignInTime", str);
+                map.put("IsSignUp", sign1.getIsSignup());
+                if (sign1.getIsSignup() == 1){
+                    String SignUpTime = sdf.format(sign1.getSignupTime());
+                    map.put("SignUpTime", SignUpTime);
+                }
+
+                //通过用户id查询用户信息
+                ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(sign.getUserId());
+
+                //装结果准备返回
+                map.put("Code", butlerUser.getReferralCode());
+                map.put("userName", butlerUser.getName());
+                map.put("telePhone", butlerUser.getTelephone());
+
+                list1.add(map);
+            }
         }
-        map.put("Code", butlerUser.getReferralCode());
-        map.put("userName", butlerUser.getName());
-        map.put("telePhone", butlerUser.getTelephone());
-
-
-        return Response.getInstance(CodeEnum.SUCCESS, map);
+        list1.add(meetingMap);
+        return Response.getInstance(CodeEnum.SUCCESS, list1);
     }
 
 
