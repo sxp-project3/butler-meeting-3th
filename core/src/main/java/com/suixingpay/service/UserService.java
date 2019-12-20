@@ -2,6 +2,8 @@ package com.suixingpay.service;
 
 import com.suixingpay.pojo.ButlerUser;
 import com.suixingpay.vo.ButlerUserVO;
+import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
  * <p>
  * Created by jalr on 2019/12/18.
  */
+@Validated
 public interface UserService {
     /**
      * 验证用户登录，如果登录，则返回该用户的实体信息(显示层实体)
@@ -37,4 +40,12 @@ public interface UserService {
      * @return 如果 token 无效，表示未登录，如果 token 有就表示有登录，并返回有效的截至时间
      */
     String isUserLogin(String token);
+
+    /**
+     * 根据推荐码查出用户 id
+     *
+     * @param referralCode 推荐码
+     * @return 如果为空，则返回
+     */
+    Integer getUserIdByReferCode(@NotBlank(message = "推荐码不可为空！") String referralCode);
 }

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suixingpay.mapper.MeetingMapper">
+
+    <resultMap id="BaseResultMap" type="com.suixingpay.pojo.Meeting">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="if_fee" jdbcType="INTEGER" property="ifFee" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="host" jdbcType="VARCHAR" property="host" />
+        <result column="sign_up_endtime" jdbcType="TIMESTAMP" property="signUpEndTime" />
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="place_province" jdbcType="VARCHAR" property="placeProvince" />
+        <result column="place_city" jdbcType="VARCHAR" property="placeCity" />
+        <result column="place_county" jdbcType="VARCHAR" property="placeCounty" />
+        <result column="detail_address" jdbcType="VARCHAR" property="detailAddress" />
+        <result column="description" jdbcType="VARCHAR" property="description" />
+        <result column="status" jdbcType="INTEGER" property="status" />
+        <result column="create_user_id" jdbcType="INTEGER" property="createUserId" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
+    <!--数据库字段集合 - SQL 查询字段-->
+    <sql id="Active_Column_List">
+        id
+        ,
+        type,
+        if_fee,
+        name,
+        host,
+        sign_up_endtime,
+        start_time,
+        duration,
+        place_province,
+        place_city,
+        place_county,
+        detail_address,
+        description,
+        status,
+        create_user_id,
+        create_time
+    </sql>
+
+    <!--    动态SQL ：模糊插入一条会议，对应新建会议功能 -->
+    <insert id="insertMeeting" parameterType="com.suixingpay.pojo.Meeting">
+        insert into meeting
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="type != null and type !=''">
+                type,
+            </if>
+            <if test="ifFee != null">
+                if_fee,
+            </if>
+            <if test="name != null and name !=''">
+                name,
+            </if>
+            <if test="host != null and host !=''">
+                host,
+            </if>
+            <if test="signUpEndTime != null">
+                sign_up_endtime,
+            </if>
+            <if test="startTime != null">
+                start_time,
+            </if>
+            <if test="duration != null">
+                duration,
+            </if>
+            <if test="placeProvince != null and placeProvince !=''">
+                place_province,
+            </if>
+            <if test="placeCity != null and placeCity !=''">
+                place_city,
+            </if>
+            <if test="placeCounty != null and placeCounty !=''">
+                place_county,
+            </if>
+            <if test="detailAddress != null and detailAddress !=''">
+                detail_address,
+            </if>
+            <if test="description != null and description !=''">
+                description,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createUserId != null">
+                create_user_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="type != null and type !=''">
+                #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="ifFee != null">
+                #{ifFee,jdbcType=INTEGER},
+            </if>
+            <if test="name != null and name !=''">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null and host !=''">
+                #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="signUpEndTime != null">
+                #{signUpEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startTime != null">
+                #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="duration != null">
+                #{duration,jdbcType=INTEGER},
+            </if>
+            <if test="placeProvince != null and placeProvince !=''">
+                #{placeProvince,jdbcType=VARCHAR},
+            </if>
+            <if test="placeCity != null and placeCity !=''">
+                #{placeCity,jdbcType=VARCHAR},
+            </if>
+            <if test="placeCounty != null and placeCounty !=''">
+                #{placeCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="detailAddress != null and detailAddress !=''">
+                #{detailAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null and description !=''">
+                #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                #{createUserId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="getListForFrontShow" resultMap="BaseResultMap">
+        select
+        <include refid="Active_Column_List"/>
+        from meeting
+        where sign_up_endtime &gt; #{nowDate}
+        <if test="createUserIds != null">
+            and create_user_id in
+            <foreach collection="createUserIds" item="userId" open="(" close=")" separator=",">
+                #{userId}
+            </foreach>
+        </if>
+    </select>
+    <select id="selectOneById" resultMap="BaseResultMap">
+        select
+        <include refid="Active_Column_List"/>
+        from meeting where id=#{meetingId}
+    </select>
+
+    <select id="getMyCreateList" resultMap="BaseResultMap">
+        select
+        <include refid="Active_Column_List"/>
+        from meeting
+        where create_user_id=#{userId};
+    </select>
+
+<!--    ${params.nickname}这种写法参数默认是传字符串，-->
+<!--    #{params.accountId}可以取Long，Integer之类的。-->
+    <select id="paramSearchList" parameterType="map" resultMap="BaseResultMap">
+        select
+        <include refid="Active_Column_List"/>
+        from meeting
+        where 1=1
+        <if test="params.createUserId!=null and params.createUserId!=''">
+            and create_user_id=#{params.createUserId}
+        </if>
+        <if test="params.ifFee!=null and params.ifFee!=''">
+            and if_fee=#{params.ifFee}
+        </if>
+
+    </select>
+    <select id="paramSearchList2" parameterType="com.suixingpay.vo.SearchMeetingParamVo" resultMap="BaseResultMap">
+        select
+        <include refid="Active_Column_List"/>
+        from meeting
+        where 1=1
+        <if test="(ifFee!=null and ifFee!='') or ifFee==0">
+            and if_fee=#{ifFee}
+        </if>
+        <if test="(status!=null and status!='') or status==0">
+            and status=#{status}
+        </if>
+        <if test="type!=null and type!=''">
+            and `type`=#{type}
+        </if>
+
+    </select>
+    <!--    动态 SQL : 修改会议信息 -->
+    <update id="updateMeetingById" parameterType="com.suixingpay.pojo.Meeting">
+        update meeting
+        <set>
+            <if test="type != null and type !=''">
+                type = #{type,jdbcType=VARCHAR},
+            </if>
+            <if test="ifFee != null">
+                if_fee = #{ifFee,jdbcType=INTEGER},
+            </if>
+            <if test="name != null and name !=''">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="host != null and host !=''">
+                host = #{host,jdbcType=VARCHAR},
+            </if>
+            <if test="signUpEndTime != null">
+                sign_up_endtime = #{signUpEndTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="duration != null">
+                duration = #{duration,jdbcType=INTEGER},
+            </if>
+            <if test="placeProvince != null and placeProvince !=''">
+                place_province = #{placeProvince,jdbcType=VARCHAR},
+            </if>
+            <if test="placeCity != null and placeCity !=''">
+                place_city = #{placeCity,jdbcType=VARCHAR},
+            </if>
+            <if test="placeCounty != null and placeCounty !=''">
+                place_county = #{placeCounty,jdbcType=VARCHAR},
+            </if>
+            <if test="detailAddress != null and detailAddress !=''">
+                detail_address = #{detailAddress,jdbcType=VARCHAR},
+            </if>
+            <if test="description != null and description !=''">
+                description = #{description,jdbcType=VARCHAR},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="createUserId != null">
+                create_user_id = #{createUserId,jdbcType=INTEGER}
+            </if>
+        </set>
+        where id = #{id, jdbcType=INTEGER}
+    </update>
+</mapper>
