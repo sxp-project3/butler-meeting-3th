@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.suixingpay.mapper.ButlerSubordinatesMapper">
+
+    <resultMap id="BaseResultMap" type="com.suixingpay.pojo.ButlerSubordinates">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="subordinates_id" property="subordinatesId" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_delete" property="isDelete" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="BasedResultMap" type="com.suixingpay.pojo.ButlerUser">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="account" property="account" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+        <result column="telephone" property="telephone" jdbcType="VARCHAR"/>
+        <result column="is_delete" property="isDelete" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="root_user_id" property="rootUserId" jdbcType="INTEGER"/>
+        <result column="leader_id" property="leaderId" jdbcType="INTEGER"/>
+        <result column="referral_code" property="referralCode" jdbcType="VARCHAR"/>
+        <result column="level_num" property="levelNum" jdbcType="INTEGER"/>
+        <result column="province" property="province" jdbcType="INTEGER"/>
+        <result column="city" property="city" jdbcType="INTEGER"/>
+        <result column="role" property="role" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    id, user_id, subordinates_id, create_time, update_time, is_delete
+    </sql>
+    <sql id="Based_Column_List">
+    id,name,account,password,telephone,is_delete,create_time,update_time,root_user_id,leader_id,
+    referral_code,level_num,province,city,role
+    </sql>
+    
+    <select id="selectUserIdBySubId" resultType="java.lang.Integer">
+        select
+        user_id
+        from butler_subordinates
+        where 1 = 1
+        and subordinates_id=#{id}
+    </select>
+    <select id="selectParentInfoBySubId" resultType="com.suixingpay.pojo.ButlerUser">
+        select
+        b.password,b.telephone,b.is_delete,b.create_time,b.update_time,b.root_user_id,b.leader_id,
+        b.referral_code,b.level_num,b.province,b.city,b.role
+        from butler_user as b,butler_subordinates as a
+        where 1 = 1
+        and b.id=a.user_id and a.user_id in
+        <foreach close=")" collection="jobTypes" index="index" item="id" open="(" separator=" , ">
+            #{id}
+        </foreach>
+    </select>
+    <select id="selectLeaderByid" resultType="java.lang.Integer">
+        select
+        leader_id
+        from butler_user
+        where  1=1
+        and id=#{id}
+    </select>
+    <select id="selectParentInfoByid" resultType="com.suixingpay.pojo.ButlerUser">
+        select
+        <include refid="Based_Column_List"></include>
+        from butler_user
+        where  1=1
+        and id=#{id}
+    </select>
+
+    <select id="selectByid" resultType="com.suixingpay.pojo.ButlerUser">
+        select
+        <include refid="Based_Column_List"/>
+        from butler_user
+        where  1=1
+        and id=#{id}
+    </select>
+
+
+
+</mapper>
