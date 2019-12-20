@@ -177,7 +177,7 @@ public class SignController {
         return Response.getInstance(CodeEnum.SUCCESS, "签到成功");
     }
 
-    @RequestMapping(value = "/selectSignUp")
+    @RequestMapping(value = "/selectSignUp", method = RequestMethod.POST)
     public Response SignUpInfo(@RequestBody Sign sign) {
 
         LOGGER.info("接收的参数为[{},{}]", sign.getUserId(), sign.getMeetingId());
