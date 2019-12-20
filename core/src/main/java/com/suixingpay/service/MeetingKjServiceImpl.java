@@ -30,6 +30,16 @@ public class MeetingKjServiceImpl implements MeetingKjService {
         userIds.add(userId);
 
         List<Meeting> meetings = meetingMapper.getListForFrontShow(now, userIds);
+        List<Integer> meetingIds = new ArrayList<>();
+//        for (Meeting oneMeeting:
+//                meetings) {
+//
+//            meetingIds.add(oneMeeting.getId());
+//        }
+//
+//        signService.selectWithOutIdAndUserId(Sign sign)
+
+
         return meetings;
     }
 

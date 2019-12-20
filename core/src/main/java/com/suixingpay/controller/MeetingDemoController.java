@@ -36,8 +36,6 @@ public class MeetingDemoController {
         PageHelper.startPage(pageNum, pageSize);
         List<Meeting> meetings = meetingKjService.getValidMeeting(userId);
         PageInfo<Meeting> page = new PageInfo<>(meetings);
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("meetings", meetings);
         Response<Map<String, HashMap>> response = Response.getInstance(CodeEnum.SUCCESS, page);
 
         return response;
