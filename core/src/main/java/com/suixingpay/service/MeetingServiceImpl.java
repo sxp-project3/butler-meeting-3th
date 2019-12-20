@@ -29,20 +29,48 @@ public class MeetingServiceImpl implements MeetingService {
 
 
     }
+
     /**
      * 根据会议id修改会议信息
      *
-     * @param Meeting 会议实体
+     * @param meeting 会议实体
      * @return
      */
     @Override
-    public Integer updateMeetingById(Meeting Meeting) {
-        Integer result = meetingMapper.updateMeetingById(Meeting);
-        if (result >= 1) {
-            return 1;
+    public Integer updateMeetingById(Meeting meeting) {
+        Integer id = meeting.getId();
+        Integer result = 0;
+        Integer status = meetingMapper.selectOneById(id).getStatus();
+        //如果会议当前审批状态为0或2，则修改后，审批状态改为待审批0
+        if (status == 0 || status == 2) {
+            meeting.setStatus(0);
+            result = meetingMapper.updateMeetingById(meeting);
+            return result;
         }
-        return 0;
+        //如果会议当前审批状态为1，则修改后，审批状态改为同意1
+        if (status == 1) {
+            meeting.setStatus(1);
+            result = meetingMapper.updateMeetingById(meeting);
+            return result;
+        }
+        return result;
 
+    }
+
+    @Override
+    public void updateStatusById(Integer id, Integer status) {
+        //如果管理员点击待审批，会议审批状态修改为0
+        if (status == 0) {
+            meetingMapper.updateStatusById(id, 0);
+        }
+        //如果管理员点击同意，会议审批状态修改为1
+        if (status == 1) {
+            meetingMapper.updateStatusById(id, 1);
+        }
+        //如果管理员点击驳回，会议审批状态修改为2
+        if (status == 2) {
+            meetingMapper.updateStatusById(id, 2);
+        }
 
     }
 }

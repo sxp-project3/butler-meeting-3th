@@ -6,10 +6,7 @@ import com.suixingpay.response.Response;
 import com.suixingpay.service.MeetingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 
@@ -24,11 +21,13 @@ public class MeetingController {
     @Autowired
     private MeetingService meetingService;
 
-    //添加会议
+    //添加会议（v5级用户以上）
     @RequestMapping(value = "/add", method = RequestMethod.POST)
     public Response add(@RequestBody @Validated Meeting meeting) {
+        //调用校验时间方法
         String checkTimeResult = checkTime(meeting);
         if (checkTimeResult.equals("时间正确")) {
+            //执行添加
             Integer result = meetingService.addMeeting(meeting);
             if (result == 1) {
                 return Response.getInstance(CodeEnum.SUCCESS);
@@ -39,11 +38,29 @@ public class MeetingController {
         return Response.getInstance(CodeEnum.FAIL, checkTimeResult);
     }
 
+    //添加会议（管理员）
+    @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
+    public Response addAdmin(@RequestBody @Validated Meeting meeting) {
+        //调用校验时间方法
+        String checkTimeResult = checkTime(meeting);
+        if (checkTimeResult.equals("时间正确")) {
+
+            meeting.setCreateUserId(0);
+            //执行添加
+            Integer result = meetingService.addMeeting(meeting);
+            if (result == 1) {
+                return Response.getInstance(CodeEnum.SUCCESS);
+            }
+            return Response.getInstance(CodeEnum.FAIL);
+        }
+
+        return Response.getInstance(CodeEnum.FAIL, checkTimeResult);
+    }
 
     //根据会议id修改会议信息
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Response update(@RequestBody @Validated Meeting meeting) {
-        if(meeting.getId()==null){
+        if (meeting.getId() == null) {
             return Response.getInstance(CodeEnum.FAIL, "会议为空");
         }
         String checkTimeResult = checkTime(meeting);
@@ -59,6 +76,16 @@ public class MeetingController {
     }
 
 
+    //待审批，同意，驳回修改会议审批状态
+    @RequestMapping(value = "/approve", method = RequestMethod.GET)
+    public Response approve(@RequestParam("id") Integer id, @RequestParam("statusNumber") Integer statusNumber) {
+        if (id == null || statusNumber == null) {
+            return Response.getInstance(CodeEnum.FAIL, "参数为空");
+        }
+        meetingService.updateStatusById(id, statusNumber);
+        return Response.getInstance(CodeEnum.SUCCESS);
+    }
+
     //改方法用于添加，修改会议功能的时间校验和添加给meeting实体加值
     public String checkTime(Meeting meeting) {
         //报名截止时间
@@ -71,7 +98,7 @@ public class MeetingController {
         meeting.setDuration(meeting.getDuration());
         //假的用户id
         meeting.setCreateUserId(1);
-        if ((signUpEndTime.after(startTime) ||signUpEndTime.before(new Date()))) {
+        if ((signUpEndTime.after(startTime) || signUpEndTime.before(new Date()))) {
             return "会议报名截止时间选择不正确！";
         }
         if (startTime.before(new Date())) {

@@ -19,6 +19,8 @@ public class Meeting {
     //会议类型
     @NotBlank(message = "会议类型 为空！")
     private String type;
+    //发起类型
+    private String sponsorType;
     //是否收费
     @NotNull(message = "是否收费 为空！")
     private Integer ifFee;
@@ -191,5 +193,13 @@ public class Meeting {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getSponsorType() {
+        return sponsorType;
+    }
+
+    public void setSponsorType(String sponsorType) {
+        this.sponsorType = sponsorType;
     }
 }
