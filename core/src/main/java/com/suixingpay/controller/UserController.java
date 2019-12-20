@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,11 +43,12 @@ public class UserController {
 
         // 用户登录请求的主页信息，如果已经登录，则不需要请求 login 接口
         String token = (String) param.get("auth_token");
-        String result = userService.isUserLogin(token);
-        if (result == null) {
-            return Response.getInstance(CodeEnum.FAIL, "传入的 token 错误！");
+
+        if (token == null || "".equals(token)) {
+            return Response.getInstance(CodeEnum.FAIL, "传入的 token 为空！");
         } else {
-            return Response.getInstance(CodeEnum.SUCCESS, result);
+            String parseResult = userService.isUserLogin(token);
+            return Response.getInstance(CodeEnum.SUCCESS, parseResult);
         }
 
     }
