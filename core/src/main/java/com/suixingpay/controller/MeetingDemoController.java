@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.suixingpay.enumeration.CodeEnum;
 import com.suixingpay.pojo.Meeting;
 import com.suixingpay.response.Response;
+import com.suixingpay.service.ButlerSubordinatesServcie;
 import com.suixingpay.service.MeetingKjService;
 import com.suixingpay.service.UserService;
 import com.suixingpay.util.HttpUtil;
@@ -36,14 +37,19 @@ public class MeetingDemoController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ButlerSubordinatesServcie butlerSubordinatesServcie;
+
     @RequestMapping(value = "/validMeetings", method = RequestMethod.GET)
     public Response validMeeting(@RequestParam(value="pageNum", required = false) String pageNumString,
                                  @RequestParam(value="pageSize", required = false) String pageSizeString) {
         String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
         ButlerUserVO userVO = userService.parseUser(token);
         log.info("userID:"+userVO.getId());
-        // Integer userId = userVO.getId();
-        Integer userId = 10001;
+        List<Integer> createUserIds = butlerSubordinatesServcie.selectUserIdBySubId(userVO.getId());
+        log.info("createUserIds:"+createUserIds);
+         Integer userId = userVO.getId();
+        // Integer userId = 10001;
         Integer pageNum = Integer.parseInt(pageNumString);
         Integer pageSize = Integer.parseInt(pageSizeString);
         PageHelper.startPage(pageNum, pageSize);

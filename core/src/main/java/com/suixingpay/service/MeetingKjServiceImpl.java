@@ -2,9 +2,11 @@ package com.suixingpay.service;
 
 import com.github.pagehelper.PageHelper;
 import com.suixingpay.mapper.MeetingMapper;
+import com.suixingpay.pojo.ButlerSubordinates;
 import com.suixingpay.pojo.Meeting;
 import com.suixingpay.vo.SearchMeetingParamVo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -21,16 +23,19 @@ public class MeetingKjServiceImpl implements MeetingKjService {
     @Resource
     private MeetingMapper meetingMapper;
 
+    @Autowired
+    private ButlerSubordinatesServcie butlerSubordinatesServcie;
+
     @Override
     public List<Meeting> getValidMeeting(Integer userId) {
         Date now = new Date();
         // 这里还没有完成，应该获取到此用户的所有上级用户id
-        List<Integer> userIds = new ArrayList<>();
-        userIds.add(0);
-        userIds.add(userId);
 
+        List<Integer> userIds = butlerSubordinatesServcie.selectUserIdBySubId(userId);
+        userIds.add(0);
+        // userIds.add(userId);
         List<Meeting> meetings = meetingMapper.getListForFrontShow(now, userIds);
-        List<Integer> meetingIds = new ArrayList<>();
+//        List<Integer> meetingIds = new ArrayList<>();
 //        for (Meeting oneMeeting:
 //                meetings) {
 //
