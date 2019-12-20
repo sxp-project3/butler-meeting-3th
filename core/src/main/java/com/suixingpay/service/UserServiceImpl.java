@@ -98,7 +98,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ButlerUserVO userLogOut(String token) {
-        return null;
+
+        // 取得用户实体
+        ButlerUserVO butlerUserVO = parseUser(token);
+
+        // token 校验失败，返回 null，说明 token 错误
+        if (butlerUserVO == null) {
+            return null;
+        } else {
+
+            // 删除 key 时，是否 value 也会删除？ -->
+            String cacheKey = USER_ID + butlerUserVO.getId();
+            boolean isExistKey = redisTemplate.opsForValue().getOperations().hasKey(cacheKey);
+
+            // 如果 key 已经不存在，说明在重复退出，设置不可达 id ，在控制层判断
+            if (!isExistKey) {
+                butlerUserVO.setId(TokenUtil.UNREACHABLE_USER_ID);
+            }
+            // 如果 key 依然存在，删除 token 缓存，返回指定 key 的用户信息
+            else {
+                redisTemplate.opsForValue().getOperations().delete(cacheKey);
+            }
+            return butlerUserVO;
+        }
     }
 
     @Override

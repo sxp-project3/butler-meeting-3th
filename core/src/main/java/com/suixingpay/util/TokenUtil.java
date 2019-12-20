@@ -28,6 +28,8 @@ public class TokenUtil {
 
     public static final String TOKEN_NAME = "auth_token";
 
+    public static final int UNREACHABLE_USER_ID = -404;
+
     //token 过期时间
     public  static  final  int calendarFiled= Calendar.DATE;
     public  static  final  int calendarInterval=10;
