@@ -2,11 +2,13 @@ package com.suixingpay.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.suixingpay.handler.GlobalExceptionHandler;
 import com.suixingpay.pojo.ButlerUser;
 import com.suixingpay.vo.ButlerUserVO;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -19,7 +21,7 @@ import java.util.*;
  * @Date 2019/12/18 10:55
  * @Version 1.0
  **/
-
+@Slf4j
 public class TokenUtil {
     //token密钥
     public static  final String SECRET="JKKLJOoasdlfj";
@@ -30,11 +32,6 @@ public class TokenUtil {
     public  static  final  int calendarFiled= Calendar.DATE;
     public  static  final  int calendarInterval=10;
 
-    @Autowired
-    public static HttpServletRequest httpServletRequest;
-
-    @Autowired
-    private static GlobalExceptionHandler globalExceptionHandler;
     /**
      * 功能描述: <JWT 生成token>
      * 〈〉
@@ -102,16 +99,13 @@ public class TokenUtil {
      * @Author: luyun
      * @Date: 2019/12/18 11:54
      */
-    public static ButlerUserVO verifyToken(String token){
+    public static ButlerUserVO verifyToken(String token) throws Exception{
         DecodedJWT jwt=null;
-        try {
-            JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(SECRET)).build();
-             jwt=jwtVerifier.verify(token);
-             jwt.getClaims();
-        }catch (Exception e){
-            e.printStackTrace();
-            throw  new RuntimeException("token值错误");
-        }
+
+        JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(SECRET)).build();
+        jwt=jwtVerifier.verify(token);
+        jwt.getClaims();
+
         Map<String, Object> map = new HashMap<>();
         int id=jwt.getClaims().get("id").asInt();
         String levelNum=jwt.getClaims().get("levelNum").asString();

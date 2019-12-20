@@ -3,6 +3,7 @@ package com.suixingpay.service;
 import com.suixingpay.mapper.ButlerSubordinatesMapper;
 import com.suixingpay.mapper.ButlerUserMapper;
 import com.suixingpay.pojo.ButlerUser;
+import com.suixingpay.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +36,7 @@ public class ButlerSubordinatesServiceImpl implements ButlerSubordinatesServcie{
     public List<ButlerUser> selectParentInfoBySubId(Integer id) {
         try {
            List<Integer> userId = butlerSubordinatesMapper.selectUserIdBySubId(id);
-
-            return butlerSubordinatesMapper.selectParentInfoBySubId(userId);
+           return butlerSubordinatesMapper.selectParentInfoBySubId(userId);
         }catch (Exception e){
             throw  new RuntimeException();
         }
@@ -50,7 +50,7 @@ public class ButlerSubordinatesServiceImpl implements ButlerSubordinatesServcie{
      * @Author: luyun
      * @Date: 2019/12/19 13:38
      */
-    public ButlerUser selectParentInfoByid(int id){
+    public ButlerUser selectParentInfoByid(Integer id){
         int ids=butlerSubordinatesMapper.selectLeaderByid(id);
         return butlerSubordinatesMapper.selectParentInfoByid(ids);
     }
