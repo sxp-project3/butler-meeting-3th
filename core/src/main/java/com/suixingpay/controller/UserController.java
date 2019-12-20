@@ -4,6 +4,8 @@ import com.suixingpay.enumeration.CodeEnum;
 import com.suixingpay.pojo.ButlerUser;
 import com.suixingpay.response.Response;
 import com.suixingpay.service.UserService;
+import com.suixingpay.util.HttpUtil;
+import com.suixingpay.util.TokenUtil;
 import com.suixingpay.vo.ButlerUserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +27,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private HttpUtil httpUtil;
+
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public Response userLogIn(@RequestBody @Validated ButlerUser butlerUser) {
 
@@ -38,13 +43,13 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/index", method = RequestMethod.POST)
-    public Response indexInfo(@RequestBody Map<String, Object> param) {
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
+    public Response indexInfo() {
 
         // 用户登录请求的主页信息，如果已经登录，则不需要请求 login 接口
-        String token = (String) param.get("auth_token");
+        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
 
-        if (token == null || "".equals(token)) {
+        if (token == null) {
             return Response.getInstance(CodeEnum.FAIL, "传入的 token 为空！");
         } else {
             String parseResult = userService.isUserLogin(token);
