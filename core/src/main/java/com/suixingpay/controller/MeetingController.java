@@ -45,6 +45,7 @@ public class MeetingController {
         return Response.getInstance(CodeEnum.FAIL, checkTimeResult);
     }
 
+
     //添加会议（管理员）
     @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
     public Response addAdmin(@RequestBody @Validated Meeting meeting) {
@@ -52,7 +53,13 @@ public class MeetingController {
         String checkTimeResult = checkTime(meeting);
         if (checkTimeResult.equals("时间正确")) {
             String code = meeting.getReferralCode();
-            meeting.setCreateUserId(0);
+            Integer reCode=userService.getUserIdByReferCode(code);
+            //如果推荐码不存在，那么用户id为空,将会议创建人id设为0
+            if(reCode==null){
+                meeting.setCreateUserId(0);
+            }
+            //如果推荐码存在，将会议创建人id设为推荐码人id
+            meeting.setCreateUserId(reCode);
             //执行添加
             Integer result = meetingService.addMeeting(meeting);
             if (result == 1) {
@@ -63,6 +70,7 @@ public class MeetingController {
 
         return Response.getInstance(CodeEnum.FAIL, checkTimeResult);
     }
+
 
     //根据会议id修改会议信息
     @RequestMapping(value = "/update", method = RequestMethod.POST)
@@ -93,6 +101,7 @@ public class MeetingController {
         return Response.getInstance(CodeEnum.SUCCESS);
     }
 
+
     //改方法用于添加，修改会议功能的时间校验和添加给meeting实体加值
     public String checkTime(Meeting meeting) {
         //报名截止时间
@@ -104,19 +113,20 @@ public class MeetingController {
         //前台获取会议时长
         meeting.setDuration(meeting.getDuration());
         //从token中获取用户id
-        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
-        if(token==null||token==""){
-            return "未登录！";
-        }
-        ButlerUserVO userVO = userService.parseUser(token);
-        Integer userId = userVO.getId();
-        //获取当前用户等级
-        String levelNumString =userVO.getLevelNum();
-        Integer levelNum = Integer.parseInt(levelNumString);
-        //如果当前用户等级不够，不能操作添加，修改功能
-        if(levelNum<5){
-            return "该用户无此功能权限！";
-        }
+//        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
+//        if(token==null||token==""){
+//            return "未登录！";
+//        }
+//        ButlerUserVO userVO = userService.parseUser(token);
+//        Integer userId = userVO.getId();
+//        //获取当前用户等级
+//        String levelNumString =userVO.getLevelNum();
+//        Integer levelNum = Integer.parseInt(levelNumString);
+//        //如果当前用户等级不够，不能操作添加，修改功能
+//        if(levelNum<5){
+//            return "该用户无此功能权限！";
+//        }
+        Integer userId=1;
         meeting.setCreateUserId(userId);
         if ((signUpEndTime.after(startTime) || signUpEndTime.before(new Date()))) {
             return "会议报名截止时间选择不正确！";

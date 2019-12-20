@@ -1,6 +1,7 @@
 package com.suixingpay.pojo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -27,6 +28,7 @@ public class Meeting {
     @NotNull(message = "是否收费 为空！")
     private Integer ifFee;
     //会议名称
+    @Length(min=0,max=13)
     @NotBlank(message = "会议名称为空！")
     private String name;
     //主办方
@@ -55,6 +57,7 @@ public class Meeting {
     @NotBlank(message = "详细地址为空！")
     private String detailAddress;
     //会议描述
+    @Length(min=0,max=200)
     @NotBlank(message = "会议描述为空！")
     private String description;
     //会议当前状态
