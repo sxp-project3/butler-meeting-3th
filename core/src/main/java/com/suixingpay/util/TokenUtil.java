@@ -29,12 +29,7 @@ public class TokenUtil {
     //token 过期时间
     public  static  final  int calendarFiled= Calendar.DATE;
     public  static  final  int calendarInterval=10;
-
-    @Autowired
-    public static HttpServletRequest httpServletRequest;
-
-    @Autowired
-    private static GlobalExceptionHandler globalExceptionHandler;
+    
     /**
      * 功能描述: <JWT 生成token>
      * 〈〉
@@ -109,8 +104,8 @@ public class TokenUtil {
              jwt=jwtVerifier.verify(token);
              jwt.getClaims();
         }catch (Exception e){
-
             System.out.println("错误异常"+e);
+
         }
         Map<String, Object> map = new HashMap<>();
         int id=jwt.getClaims().get("id").asInt();

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public class Utils {
 
     @Autowired
-     public static  HttpServletRequest httpServletRequest;
+     private   HttpServletRequest httpServletRequest;
 
     /**
      * 功能描述: <判断是否为空>
@@ -26,7 +26,7 @@ public class Utils {
      * @Author: luyun
      * @Date: 2019/12/18 12:03
      */
-    public static boolean isBlank(String str) {
+    public  boolean isBlank(String str) {
         int strLen;
         if (str != null && (strLen = str.length()) != 0) {
             for(int i = 0; i < strLen; ++i) {
@@ -49,7 +49,7 @@ public class Utils {
      * @Author: luyun
      * @Date: 2019/12/18 12:05
      */
-    public static  String getToken(String tokenName){
+    public   String getToken(String tokenName){
         String token=httpServletRequest.getHeader(tokenName);
         if (tokenName==null){
             new RuntimeException("token为空，请登录");
