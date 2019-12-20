@@ -228,7 +228,7 @@ public class SignController {
         Integer meetingId = sign.getMeetingId();
 
         //定义一个Map用于装结果
-        Map<String, Object> cityMap = new HashMap<>();
+        Map<String, Object> meetingMap = new HashMap<>();
         List<Map<String, Object>> list1 = new ArrayList<>();
 
 
@@ -241,13 +241,19 @@ public class SignController {
         //通过会议id查询会议信息
         Meeting meeting = meetingKjService.getOne(meetingId);
 
+        //查询出当前会议的报名总人数
+        int signUpSum = signService.selectCountSignUp(meetingId);
+
+        log.info(meeting.getName()+"报名总人数"+signUpSum);
+
         //判断当前会议id是否存在
         if (meeting == null){
             LOGGER.info("不存在的会议");
             return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
         }
-        cityMap.put("Province", meeting.getPlaceCity());
-        cityMap.put("city", meeting.getPlaceCounty());
+        meetingMap.put("signUpSum", signUpSum);
+        meetingMap.put("Province", meeting.getPlaceCity());
+        meetingMap.put("city", meeting.getPlaceCounty());
 
         //通过会议id查询出当前会议下的所有用户id
         List<Integer> list = signService.selectIdByMeeting(sign);
@@ -255,7 +261,7 @@ public class SignController {
         //判断当前会议有没有用户报名
         if (list.size() == 0){
             //给前端提示当前会议没有任何报名
-            cityMap.put("signUpCount", 0);
+            meetingMap.put("signUpCount", 0);
         }
         for (int i = 0;i < list.size();i++){
 
@@ -285,7 +291,7 @@ public class SignController {
                 list1.add(map);
             }
         }
-        list1.add(cityMap);
+        list1.add(meetingMap);
         return Response.getInstance(CodeEnum.SUCCESS, list1);
     }
 
@@ -298,7 +304,7 @@ public class SignController {
         Integer meetingId = sign.getMeetingId();
 
         //定义一个Map用于装结果
-        Map<String, Object> cityMap = new HashMap<>();
+        Map<String, Object> meetingMap = new HashMap<>();
         List<Map<String, Object>> list1 = new ArrayList<>();
 
 
@@ -311,20 +317,25 @@ public class SignController {
         //通过会议id查询会议信息
         Meeting meeting = meetingKjService.getOne(meetingId);
 
+        //查询出当前会议的签到总人数
+        int signInSum = signService.selectCountSignIn(meetingId);
+
+        log.info(meeting.getName()+"报名总人数"+signInSum);
         //判断当前会议id是否存在
         if (meeting == null){
             LOGGER.info("不存在的会议");
             return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
         }
-        cityMap.put("Province", meeting.getPlaceCity());
-        cityMap.put("city", meeting.getPlaceCounty());
+        meetingMap.put("Province", meeting.getPlaceCity());
+        meetingMap.put("city", meeting.getPlaceCounty());
+        meetingMap.put("signInSum", signInSum);
 
         //通过会议id查询出当前会议下的所有用户id
         List<Integer> list = signService.selectIdByMeeting(sign);
 
         //判断当前会议有没有用户签到
         if (list.size() == 0){
-            cityMap.put("signInCount", 0);
+            meetingMap.put("signInCount", 0);
         }
         for (int i = 0;i < list.size();i++){
 
@@ -353,7 +364,7 @@ public class SignController {
                 list1.add(map);
             }
         }
-        list1.add(cityMap);
+        list1.add(meetingMap);
         return Response.getInstance(CodeEnum.SUCCESS, list1);
     }
 
