@@ -9,6 +9,11 @@ import com.suixingpay.service.ButlerSubordinatesServcie;
 import com.suixingpay.service.MeetingKjService;
 import com.suixingpay.service.SignService;
 
+import com.suixingpay.service.UserService;
+import com.suixingpay.util.HttpUtil;
+import com.suixingpay.util.TokenUtil;
+import com.suixingpay.util.Utils;
+import com.suixingpay.vo.ButlerUserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,16 +48,28 @@ public class SignController {
     @Autowired
     private ButlerSubordinatesServcie butlerSubordinatesServcie;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private HttpUtil httpUtil;
+
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public Response signUpActive(@RequestBody Sign sign) {
         //接参
+        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
+        ButlerUserVO userVO = userService.parseUser(token);
 
-        LOGGER.info("报名功能接收的参数为[{},{}]", sign.getUserId(), sign.getMeetingId());
+        //通过token传入的参数会议id
+        Integer userID = userVO.getId();
+        sign.setUserId(userID);
+
+        LOGGER.info("报名功能接收的参数为[{},{}]", userVO.getId(), sign.getMeetingId());
 
         //查询出当前会议下所有用户id用作报名判断
         List<Integer> list = signService.selectIdByMeeting(sign);
 
-        //接收前端传入的参数 用户id，会议id
+        //接收前端传入的参数会议id
         Integer userId = sign.getUserId();
         Integer meetingId = sign.getMeetingId();
         Date date = new Date();
@@ -108,14 +125,20 @@ public class SignController {
     @RequestMapping(value = "/signin", method = RequestMethod.POST)
     public Response selectIdByMeeting(@RequestBody Sign sign) {
 
-
         //接参
-        LOGGER.info("签到功能接收的参数为[{},{}]", sign.getUserId(), sign.getMeetingId());
+        String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
+        ButlerUserVO userVO = userService.parseUser(token);
 
-        //查询出当前会议下所有用户用作签到判断
+        //通过token传入的参数会议id
+        Integer userID = userVO.getId();
+        sign.setUserId(userID);
+
+        LOGGER.info("报名功能接收的参数为[{},{}]", userVO.getId(), sign.getMeetingId());
+
+        //查询出当前会议下所有用户id用作报名判断
         List<Integer> list = signService.selectIdByMeeting(sign);
 
-        //接收当前签到的用户id和活动id
+        //接收前端传入的参数会议id
         Integer userId = sign.getUserId();
         Integer meetingId = sign.getMeetingId();
         Date date = new Date();
@@ -260,9 +283,6 @@ public class SignController {
                 map.put("telePhone", butlerUser.getTelephone());
 
                 list1.add(map);
-            }else {
-                map.put("signInCount", 0);
-                list1.add(map);
             }
         }
         list1.add(cityMap);
@@ -330,9 +350,6 @@ public class SignController {
                 map.put("userName", butlerUser.getName());
                 map.put("telePhone", butlerUser.getTelephone());
 
-                list1.add(map);
-            }else {
-                map.put("signInCount", 0);
                 list1.add(map);
             }
         }
