@@ -44,12 +44,13 @@
     </select>
     <select id="selectParentInfoBySubId" resultType="com.suixingpay.pojo.ButlerUser">
         select
+        b.id,b.account,b.name,
         b.password,b.telephone,b.is_delete,b.create_time,b.update_time,b.root_user_id,b.leader_id,
         b.referral_code,b.level_num,b.province,b.city,b.role
         from butler_user as b,butler_subordinates as a
         where 1 = 1
         and b.id=a.user_id and a.user_id in
-        <foreach close=")" collection="jobTypes" index="index" item="id" open="(" separator=" , ">
+        <foreach close=")" collection="userId" index="index" item="id" open="(" separator=" , ">
             #{id}
         </foreach>
     </select>
@@ -62,7 +63,7 @@
     </select>
     <select id="selectParentInfoByid" resultType="com.suixingpay.pojo.ButlerUser">
         select
-        <include refid="Based_Column_List"></include>
+        <include refid="Based_Column_List"/>
         from butler_user
         where  1=1
         and id=#{id}

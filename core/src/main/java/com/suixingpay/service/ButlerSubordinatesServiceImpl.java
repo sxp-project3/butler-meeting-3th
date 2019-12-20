@@ -34,11 +34,11 @@ public class ButlerSubordinatesServiceImpl implements ButlerSubordinatesServcie{
      */
     public List<ButlerUser> selectParentInfoBySubId(Integer id) {
         try {
-           Integer userId = butlerSubordinatesMapper.selectUserIdBySubId(id);
+           List<Integer> userId = butlerSubordinatesMapper.selectUserIdBySubId(id);
 
             return butlerSubordinatesMapper.selectParentInfoBySubId(userId);
         }catch (Exception e){
-            throw  new RuntimeException("错误");
+            throw  new RuntimeException();
         }
     }
 
@@ -66,5 +66,26 @@ public class ButlerSubordinatesServiceImpl implements ButlerSubordinatesServcie{
 
         return butlerSubordinatesMapper.selectByid(id);
     }
-
+    /**
+     * 功能描述: <根据子类id获取所有父类id>
+     * 〈〉
+     * @Param: [id]
+     * @Return: java.util.List<java.lang.Integer>
+     * @Author: luyun
+     * @Date: 2019/12/20 11:13
+     */
+    public List<Integer> selectUserIdBySubId(Integer id){
+        return butlerSubordinatesMapper.selectUserIdBySubId(id);
+    }
+    /**
+     * 功能描述: <根据用户id获取直接父类id>
+     * 〈〉
+     * @Param: [id]
+     * @Return: java.lang.Integer
+     * @Author: luyun
+     * @Date: 2019/12/20 11:18
+     */
+    public Integer selectLeaderByid(Integer id){
+        return butlerSubordinatesMapper.selectLeaderByid(id);
+    }
 }
