@@ -99,17 +99,13 @@ public class TokenUtil {
      * @Author: luyun
      * @Date: 2019/12/18 11:54
      */
-    public static ButlerUserVO verifyToken(String token){
+    public static ButlerUserVO verifyToken(String token) throws Exception{
         DecodedJWT jwt=null;
-        try {
-            JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(SECRET)).build();
-             jwt=jwtVerifier.verify(token);
-             jwt.getClaims();
-        }catch (Exception e){
-            log.error(e.getMessage());
-            new JWTDecodeException("token值错误,请重新输入");
 
-        }
+        JWTVerifier jwtVerifier=JWT.require(Algorithm.HMAC256(SECRET)).build();
+        jwt=jwtVerifier.verify(token);
+        jwt.getClaims();
+
         Map<String, Object> map = new HashMap<>();
         int id=jwt.getClaims().get("id").asInt();
         String levelNum=jwt.getClaims().get("levelNum").asString();
