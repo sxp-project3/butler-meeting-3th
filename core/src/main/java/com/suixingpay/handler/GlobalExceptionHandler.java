@@ -48,17 +48,27 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public Response methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException manve) {
         BindingResult bindingResult = manve.getBindingResult();
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sbLog = new StringBuilder();
+        StringBuilder sbResponse = new StringBuilder();
         if (bindingResult.hasErrors()) {
             for (FieldError fieldError : bindingResult.getFieldErrors()) {
-                sb.append(fieldError.getDefaultMessage()).append(" : ");
-                sb.append(fieldError.getField()).append(" is ");
-                sb.append(fieldError.getRejectedValue()).append(" 、");
+
+                // 响应信息
+                sbResponse.append(fieldError.getDefaultMessage()).append("、");
+
+                // 日志信息
+                sbLog.append(fieldError.getDefaultMessage()).append(" : ");
+                sbLog.append(fieldError.getField()).append(" is ");
+                sbLog.append(fieldError.getRejectedValue()).append(" 、");
+
             }
         }
-        sb.deleteCharAt(sb.length() - 1);
-        log.error(sb.toString());
-        return Response.getInstance(CodeEnum.FAIL, sb.toString());
+
+        sbResponse.deleteCharAt(sbResponse.length() - 1);
+        sbLog.deleteCharAt(sbLog.length() - 1);
+
+        log.error(sbLog.toString());
+        return Response.getInstance(CodeEnum.FAIL, sbResponse.toString());
     }
 
     /**
@@ -71,15 +81,25 @@ public class GlobalExceptionHandler {
     @ResponseBody
     public Response constraintViolationExceptionHandler(ConstraintViolationException cve) {
         Set<ConstraintViolation<?>> constraintViolations = cve.getConstraintViolations();
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sbLog = new StringBuilder();
+        StringBuilder sbResponse = new StringBuilder();
         for (ConstraintViolation violation : constraintViolations) {
-            sb.append(violation.getMessage()).append(" : ");
-            sb.append(violation.getPropertyPath()).append(" is ");
-            sb.append(violation.getInvalidValue()).append("、");
+
+            // 返回信息
+            sbResponse.append(violation.getMessage()).append("、");
+
+            // 日志信息
+            sbLog.append(violation.getMessage()).append(" : ");
+            sbLog.append(violation.getPropertyPath()).append(" is ");
+            sbLog.append(violation.getInvalidValue()).append("、");
+
         }
-        sb.deleteCharAt(sb.length() - 1);
-        log.error(sb.toString());
-        return Response.getInstance(CodeEnum.FAIL, sb.toString());
+
+        sbResponse.deleteCharAt(sbResponse.length() - 1);
+        sbLog.deleteCharAt(sbLog.length() - 1);
+        log.error(sbLog.toString());
+
+        return Response.getInstance(CodeEnum.FAIL, sbResponse.toString());
     }
 
 }
