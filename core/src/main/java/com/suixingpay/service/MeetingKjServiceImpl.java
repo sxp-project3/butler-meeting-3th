@@ -1,5 +1,6 @@
 package com.suixingpay.service;
 
+import com.github.pagehelper.PageHelper;
 import com.suixingpay.mapper.MeetingMapper;
 import com.suixingpay.pojo.Meeting;
 import com.suixingpay.vo.SearchMeetingParamVo;
@@ -29,6 +30,16 @@ public class MeetingKjServiceImpl implements MeetingKjService {
         userIds.add(userId);
 
         List<Meeting> meetings = meetingMapper.getListForFrontShow(now, userIds);
+        List<Integer> meetingIds = new ArrayList<>();
+//        for (Meeting oneMeeting:
+//                meetings) {
+//
+//            meetingIds.add(oneMeeting.getId());
+//        }
+//
+//        signService.selectWithOutIdAndUserId(Sign sign)
+
+
         return meetings;
     }
 
@@ -44,12 +55,13 @@ public class MeetingKjServiceImpl implements MeetingKjService {
     }
 
     @Override
-    public List<Meeting> searchMeeting(SearchMeetingParamVo searchMeetingParamVo) {
+    public List<Meeting>  searchMeeting(SearchMeetingParamVo searchMeetingParamVo) {
 
-        Map<String,Object> params = new HashMap<>();
-        if (!searchMeetingParamVo.getUserPromoteCode().isEmpty()) {
+        // Map<String,Object> params = new HashMap<>();
+        // log.info("ifFee"+searchMeetingParamVo.getIfFee());
+        // if (!searchMeetingParamVo.getUserPromoteCode().isEmpty()) {
             // 这里需要转换管家推荐码为用户id，尚未完成
-        }
+        // }
 //        params.put("ifFee", searchMeetingParamVo.getIfFee());
 //        if (searchMeetingParamVo.getStarttimeBegin() != null) {
 //            params.put("starttimeBegin", searchMeetingParamVo.getStarttimeBegin());
@@ -57,15 +69,16 @@ public class MeetingKjServiceImpl implements MeetingKjService {
 //        if (searchMeetingParamVo.getStarttimeBegin() != null) {
 //            params.put("starttimeEnd", searchMeetingParamVo.getStarttimeEnd());
 //        }
-        if (searchMeetingParamVo.getIsUserCreate() > 0) {
-            searchMeetingParamVo.setCreateUserId(0);
-        }
+//        if (searchMeetingParamVo.getIsUserCreate() > 0) {
+//            searchMeetingParamVo.setCreateUserId(0);
+//        }
 //        if (!searchMeetingParamVo.getMeetingStat().isEmpty()) {
 //            if (searchMeetingParamVo.getMeetingStat().equals("待发布")) {
 //                searchMeetingParamVo.setStatus();
 //            }
 //        }
-        List<Meeting> meetings = meetingMapper.paramSearchList(params);
+        PageHelper.startPage(searchMeetingParamVo.getPageNum(), searchMeetingParamVo.getPageSize());
+        List<Meeting> meetings = meetingMapper.paramSearchList2(searchMeetingParamVo);
         return meetings;
     }
 }

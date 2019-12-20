@@ -125,6 +125,17 @@ public class UserServiceImpl implements UserService {
             String result = str[str.length - 1];
             return JacksonUtil.dateToString(Double.parseDouble(result));
         }
+    }
 
+    @Override
+    public Integer getUserIdByReferCode(String referralCode) {
+        ButlerUser butlerUser = new ButlerUser();
+        butlerUser.setAccount(referralCode);
+        List<ButlerUser> referCodeList = butlerUserMapper.selectUserAnyCondition(butlerUser);
+        if (referCodeList.size() == 0) {
+            return null;
+        } else {
+            return referCodeList.get(0).getId();
+        }
     }
 }
