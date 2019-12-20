@@ -109,8 +109,8 @@ public class TokenUtil {
              jwt=jwtVerifier.verify(token);
              jwt.getClaims();
         }catch (Exception e){
-            e.printStackTrace();
-            throw  new RuntimeException("token值错误");
+
+            System.out.println("错误异常"+e);
         }
         Map<String, Object> map = new HashMap<>();
         int id=jwt.getClaims().get("id").asInt();
