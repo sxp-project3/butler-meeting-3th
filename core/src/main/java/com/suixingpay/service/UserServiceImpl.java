@@ -157,7 +157,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer getUserIdByReferCode(String referralCode) {
         ButlerUser butlerUser = new ButlerUser();
-        butlerUser.setAccount(referralCode);
+        butlerUser.setReferralCode(referralCode);
         List<ButlerUser> referCodeList = butlerUserMapper.selectUserAnyCondition(butlerUser);
         if (referCodeList.size() == 0) {
             return null;
