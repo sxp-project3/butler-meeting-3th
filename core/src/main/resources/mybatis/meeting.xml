@@ -207,11 +207,9 @@
         <if test="type!=null and type!=''">
             and `type`=#{type}
         </if>
-        <!--
-        <if test="placeProvince!=null and placeProvince=''">
+        <if test="placeProvince!=null and placeProvince!=''">
             and place_province=#{placeProvince}
         </if>
-        -->
         <!-- 时间判空不能用 != '' -->
         <if test="starttimeBegin!=null">
             and start_time &gt; #{starttimeBegin}
