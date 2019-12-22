@@ -4,7 +4,8 @@ import com.github.pagehelper.PageHelper;
 import com.suixingpay.mapper.MeetingMapper;
 import com.suixingpay.pojo.ButlerSubordinates;
 import com.suixingpay.pojo.Meeting;
-import com.suixingpay.vo.SearchMeetingParamVo;
+// import com.suixingpay.vo.SearchMeetingParamVo;
+import com.suixingpay.query.SearchMeetingParamQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,9 +61,11 @@ public class MeetingKjServiceImpl implements MeetingKjService {
     }
 
     @Override
-    public List<Meeting>  searchMeeting(SearchMeetingParamVo searchMeetingParamVo) {
-        PageHelper.startPage(searchMeetingParamVo.getPageNum(), searchMeetingParamVo.getPageSize());
-        List<Meeting> meetings = meetingMapper.paramSearchList2(searchMeetingParamVo);
+    public List<Meeting> searchMeeting(SearchMeetingParamQuery searchMeetingParamQuery) {
+        Date now = new Date();
+        searchMeetingParamQuery.setNowDate(now);
+        PageHelper.startPage(searchMeetingParamQuery.getPageNum(), searchMeetingParamQuery.getPageSize());
+        List<Meeting> meetings = meetingMapper.paramSearchList2(searchMeetingParamQuery);
         return meetings;
     }
 }

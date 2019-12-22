@@ -1,4 +1,4 @@
-package com.suixingpay.vo;
+package com.suixingpay.query;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -7,10 +7,10 @@ import java.util.Date;
 
 /**
  * @Author: kongjian
- * @Date: 2019/12/19
+ * @Date: 2019/12/22
  */
 
-public class SearchMeetingParamVo {
+public class SearchMeetingParamQuery {
     // 鑫管家推荐码
     private String userPromoteCode;
 

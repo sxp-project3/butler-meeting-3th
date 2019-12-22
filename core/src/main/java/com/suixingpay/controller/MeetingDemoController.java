@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.suixingpay.enumeration.CodeEnum;
 import com.suixingpay.pojo.Meeting;
+import com.suixingpay.query.SearchMeetingParamQuery;
 import com.suixingpay.response.Response;
 import com.suixingpay.service.ButlerSubordinatesServcie;
 import com.suixingpay.service.MeetingKjService;
@@ -98,7 +99,7 @@ public class MeetingDemoController {
     }
 
     @RequestMapping(value = "/search-list", method = RequestMethod.POST)
-    public Response searchList(@RequestBody SearchMeetingParamVo searchMeetingParamVo) {
+    public Response searchList(@RequestBody SearchMeetingParamQuery searchMeetingParamQuery) {
         // 这里尚未完成，需要验证用户身份
 //        Integer userId = 10001; // 模拟用户id
 //
@@ -111,7 +112,7 @@ public class MeetingDemoController {
 //        Integer pageNum = Integer.parseInt(pageNumString);
 //        Integer pageSize = Integer.parseInt(pageSizeString);
 //        PageHelper.startPage(pageNum, pageSize);
-        List<Meeting> meetings = meetingKjService.searchMeeting(searchMeetingParamVo);
+        List<Meeting> meetings = meetingKjService.searchMeeting(searchMeetingParamQuery);
         PageInfo<Meeting> page = new PageInfo<>(meetings);
         Response<Map<String, HashMap>> response = Response.getInstance(CodeEnum.SUCCESS, page);
 
