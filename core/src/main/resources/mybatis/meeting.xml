@@ -159,6 +159,7 @@
         <include refid="Active_Column_List"/>
         from meeting
         where sign_up_endtime &gt; #{nowDate}
+        and status=1
         <if test="createUserIds != null">
             and create_user_id in
             <foreach collection="createUserIds" item="userId" open="(" close=")" separator=",">
