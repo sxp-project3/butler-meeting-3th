@@ -66,19 +66,27 @@ public class UserController {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public Response logOut() {
 
-        // TODO: 2019/12/20 待完成的用户注销服务
-
         // 取得当前已经登录的用户 token
         String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
-
         if (token == null) {
             return Response.getInstance(CodeEnum.FAIL, "当前 token 为空");
         } else {
             ButlerUserVO butlerUserVO = userService.userLogOut(token);
-            String successMsg = butlerUserVO.getAccount() + ":" + "log out!";
-            return Response.getInstance(CodeEnum.SUCCESS, successMsg);
-        }
 
+            // 校验 token ，返回 null 或者 user.id 不可达，说明有错
+            CodeEnum returnCodeEnum = CodeEnum.FAIL;
+            String returnMsg = "null";
+
+            if (butlerUserVO == null) {
+                returnMsg = "校验 token 错误，请重新传递！";
+            } else if (butlerUserVO.getId() == TokenUtil.UNREACHABLE_USER_ID) {
+                returnMsg = "退出失败！当前用户已退出！请勿重复退出！";
+            } else {
+                returnMsg = "用户： " + butlerUserVO.getAccount() + " 退出成功!";
+                returnCodeEnum = CodeEnum.SUCCESS;
+            }
+            return Response.getInstance(returnCodeEnum, returnMsg);
+        }
     }
 
 }
