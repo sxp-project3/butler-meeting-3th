@@ -252,7 +252,7 @@ public class SignController {
             return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
         }
         meetingMap.put("signUpSum", signUpSum);
-        meetingMap.put("Province", meeting.getPlaceCity());
+        meetingMap.put("province", meeting.getPlaceCity());
         meetingMap.put("city", meeting.getPlaceCounty());
 
         //通过会议id查询出当前会议下的所有用户id
@@ -291,8 +291,8 @@ public class SignController {
                 list1.add(map);
             }
         }
-        list1.add(meetingMap);
-        return Response.getInstance(CodeEnum.SUCCESS, list1);
+        meetingMap.put("SignUpList", list1);
+        return Response.getInstance(CodeEnum.SUCCESS, meetingMap);
     }
 
     @RequestMapping(value = "/selectSignIn",method = RequestMethod.POST)
@@ -305,6 +305,7 @@ public class SignController {
 
         //定义一个Map用于装结果
         Map<String, Object> meetingMap = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         List<Map<String, Object>> list1 = new ArrayList<>();
 
 
@@ -326,7 +327,7 @@ public class SignController {
             LOGGER.info("不存在的会议");
             return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
         }
-        meetingMap.put("Province", meeting.getPlaceCity());
+        meetingMap.put("province", meeting.getPlaceCity());
         meetingMap.put("city", meeting.getPlaceCounty());
         meetingMap.put("signInSum", signInSum);
 
@@ -354,7 +355,7 @@ public class SignController {
                 map.put("IsSignUp", sign1.getIsSignup());
                 if (sign1.getIsSignup() == 1){
                     String SignUpTime = sdf.format(sign1.getSignupTime());
-                    map.put("SignUpTime", SignUpTime);
+                    map.put("IsSignUp", SignUpTime);
                 }
 
                 //通过用户id查询用户信息
@@ -368,8 +369,8 @@ public class SignController {
                 list1.add(map);
             }
         }
-        list1.add(meetingMap);
-        return Response.getInstance(CodeEnum.SUCCESS, list1);
+        meetingMap.put("SignInList", list1);
+        return Response.getInstance(CodeEnum.SUCCESS, meetingMap);
     }
 
 
