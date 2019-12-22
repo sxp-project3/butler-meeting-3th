@@ -24,12 +24,11 @@
 
     <!--数据库字段集合 - SQL 查询字段-->
     <sql id="Active_Column_List">
-        id
-        ,
-        type,
+        id,
+        `type`,
         sponsor_type,
         if_fee,
-        name,
+        `name`,
         host,
         sign_up_endtime,
         start_time,
@@ -193,7 +192,6 @@
         <if test="params.ifFee!=null and params.ifFee!=''">
             and if_fee=#{params.ifFee}
         </if>
-
     </select>
     <select id="paramSearchList2" parameterType="com.suixingpay.vo.SearchMeetingParamVo" resultMap="BaseResultMap">
         select
@@ -209,10 +207,18 @@
         <if test="type!=null and type!=''">
             and `type`=#{type}
         </if>
+        <!--
         <if test="placeProvince!=null and placeProvince=''">
-            and place_province=#{placeProvince};
+            and place_province=#{placeProvince}
         </if>
-
+        -->
+        <!-- 时间判空不能用 != '' -->
+        <if test="starttimeBegin!=null">
+            and start_time &gt; #{starttimeBegin}
+        </if>
+        <if test="starttimeEnd!=null">
+            and start_time &lt; #{starttimeEnd}
+        </if>
     </select>
     <!--    动态 SQL : 修改会议信息 -->
     <update id="updateMeetingById" parameterType="com.suixingpay.pojo.Meeting">
