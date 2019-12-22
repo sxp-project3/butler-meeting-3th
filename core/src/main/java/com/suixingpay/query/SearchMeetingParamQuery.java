@@ -1,4 +1,4 @@
-package com.suixingpay.vo;
+package com.suixingpay.query;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -7,10 +7,10 @@ import java.util.Date;
 
 /**
  * @Author: kongjian
- * @Date: 2019/12/19
+ * @Date: 2019/12/22
  */
 
-public class SearchMeetingParamVo {
+public class SearchMeetingParamQuery {
     // 鑫管家推荐码
     private String userPromoteCode;
 
@@ -18,14 +18,19 @@ public class SearchMeetingParamVo {
     private Integer ifFee;
 
     // 会议开始日期起点
-//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date starttimeBegin;
 
     // 会议开始日期终点
-//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date starttimeEnd;
+
+    // 系统当前时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+    private Date nowDate;
 
     // 所属分公司（地点省）
     private String placeProvince;
@@ -44,6 +49,25 @@ public class SearchMeetingParamVo {
 
     // 创建用户id
     private Integer createUserId;
+
+    // 会议发起类型
+    private String sponsorType;
+
+    public String getSponsorType() {
+        return sponsorType;
+    }
+
+    public void setSponsorType(String sponsorType) {
+        this.sponsorType = sponsorType;
+    }
+
+    public Date getNowDate() {
+        return nowDate;
+    }
+
+    public void setNowDate(Date nowDate) {
+        this.nowDate = nowDate;
+    }
 
     public String getPlaceProvince() {
         return placeProvince;

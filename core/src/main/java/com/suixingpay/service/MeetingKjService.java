@@ -1,11 +1,9 @@
 package com.suixingpay.service;
 
-import com.github.pagehelper.PageInfo;
 import com.suixingpay.pojo.Meeting;
-import com.suixingpay.vo.SearchMeetingParamVo;
+import com.suixingpay.query.SearchMeetingParamQuery;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @Author: kongjian
@@ -19,5 +17,5 @@ public interface MeetingKjService {
 
     List<Meeting> getMyMeetings(Integer userId);
 
-    List<Meeting>  searchMeeting(SearchMeetingParamVo searchMeetingParamVo);
+    List<Meeting> searchMeeting(SearchMeetingParamQuery searchMeetingParamQuery);
 }
