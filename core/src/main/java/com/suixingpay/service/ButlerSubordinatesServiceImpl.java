@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * ClassName ButlerSubordinatesServiceImpl
  *
- * @Description 根据用户id查询所有父级信息
+ * @Description 根据id查询各种信息实现类
  * @Author luyun
  * @Date 2019/12/18 17:56
  * @Version 1.0
