@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * ClassName ButlerSubordinatesServcie
  *
- * @Description TODO
+ * @Description 查询各种信息的服务
  * @Author luyun
  * @Date 2019/12/18 17:53
  * @Version 1.0
