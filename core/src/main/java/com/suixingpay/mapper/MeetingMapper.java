@@ -1,13 +1,11 @@
 package com.suixingpay.mapper;
 
 import com.suixingpay.pojo.Meeting;
-import com.suixingpay.vo.SearchMeetingParamVo;
+import com.suixingpay.query.SearchMeetingParamQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.jute.compiler.JString;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,5 +37,5 @@ public interface MeetingMapper {
     //待审批，同意，驳回修改会议审批状态
     Integer updateStatusById(@Param("id") Integer id, @Param("status") Integer status);
 
-    List<Meeting> paramSearchList2(SearchMeetingParamVo searchMeetingParamVo);
+    List<Meeting> paramSearchList2(SearchMeetingParamQuery searchMeetingParamQuery);
 }

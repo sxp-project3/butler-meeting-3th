@@ -159,6 +159,7 @@
         <include refid="Active_Column_List"/>
         from meeting
         where sign_up_endtime &gt; #{nowDate}
+        and status=1
         <if test="createUserIds != null">
             and create_user_id in
             <foreach collection="createUserIds" item="userId" open="(" close=")" separator=",">
@@ -193,7 +194,7 @@
             and if_fee=#{params.ifFee}
         </if>
     </select>
-    <select id="paramSearchList2" parameterType="com.suixingpay.vo.SearchMeetingParamVo" resultMap="BaseResultMap">
+    <select id="paramSearchList2" parameterType="com.suixingpay.query.SearchMeetingParamQuery" resultMap="BaseResultMap">
         select
         <include refid="Active_Column_List"/>
         from meeting
@@ -212,11 +213,27 @@
         </if>
         <!-- 时间判空不能用 != '' -->
         <if test="starttimeBegin!=null">
-            and start_time &gt; #{starttimeBegin}
+            and start_time &gt;= #{starttimeBegin}
         </if>
         <if test="starttimeEnd!=null">
-            and start_time &lt; #{starttimeEnd}
+            and start_time &lt;= #{starttimeEnd}
         </if>
+        <if test="sponsorType!=null and sponsorType!=''">
+            and sponsor_type=#{sponsorType}
+        </if>
+        <if test="meetingStat == '待发布'">
+            and status in (0,2)
+        </if>
+        <if test="meetingStat == '报名中'">
+            and status=1 and sign_up_endtime &gt;= #{nowDate}
+        </if>
+        <if test="meetingStat == '报名截止'">
+            and status=1 and sign_up_endtime &lt;= #{nowDate} and start_time &gt;= #{nowDate}
+        </if>
+        <if test="meetingStat == '已完成'">
+            and status=1 and start_time &lt;= #{nowDate}
+        </if>
+
     </select>
     <!--    动态 SQL : 修改会议信息 -->
     <update id="updateMeetingById" parameterType="com.suixingpay.pojo.Meeting">

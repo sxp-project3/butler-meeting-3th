@@ -3,11 +3,11 @@ package com.suixingpay.controller;
 import com.github.pagehelper.PageInfo;
 import com.suixingpay.enumeration.CodeEnum;
 import com.suixingpay.pojo.Meeting;
+import com.suixingpay.query.SearchMeetingParamQuery;
 import com.suixingpay.response.Response;
 import com.suixingpay.service.MeetingKjService;
 import com.suixingpay.util.TokenUtil;
 import com.suixingpay.vo.ButlerUserVO;
-import com.suixingpay.vo.SearchMeetingParamVo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +39,8 @@ public class MeetingBackController {
     }
 
     @RequestMapping(value = "/search-list", method = RequestMethod.POST)
-    public Response searchList(@RequestBody SearchMeetingParamVo searchMeetingParamVo) {
-        List<Meeting> meetings = meetingKjService.searchMeeting(searchMeetingParamVo);
+    public Response searchList(@RequestBody SearchMeetingParamQuery searchMeetingParamQuery) {
+        List<Meeting> meetings = meetingKjService.searchMeeting(searchMeetingParamQuery);
         PageInfo<Meeting> page = new PageInfo<>(meetings);
         Response<Map<String, HashMap>> response = Response.getInstance(CodeEnum.SUCCESS, page);
 

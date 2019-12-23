@@ -57,28 +57,44 @@ public class MeetingController {
     //添加会议（管理员）
     @RequestMapping(value = "/addAdmin", method = RequestMethod.POST)
     public Response addAdmin(@RequestBody @Validated Meeting meeting) {
-        //调用校验时间方法
-        String checkTimeResult = checkTime(meeting);
-        if (checkTimeResult.equals("时间正确")) {
-            String code = meeting.getReferralCode();
+        //报名截止时间
+        Date signUpEndTime = meeting.getSignUpEndTime();
+        //会议开始时间
+        Date startTime = meeting.getStartTime();
+        //会议创建时间
+        meeting.setCreateTime(new Date());
+        //前台获取会议时长
+        meeting.setDuration(meeting.getDuration());
+
+        if ((signUpEndTime.after(startTime) || signUpEndTime.before(new Date()))) {
+            return Response.getInstance(CodeEnum.FAIL, "会议报名截止时间选择不正确！");
+        }
+        if (startTime.before(new Date())) {
+            return Response.getInstance(CodeEnum.FAIL, "会议开始时间选择不正确！");
+
+        }
+        //前台传推荐码，可以为空
+        String code = meeting.getReferralCode();
+        if (code == null || code.equals("")) {
+            meeting.setCreateUserId(0);
+        } else {
             Integer reCode = userService.getUserIdByReferCode(code);
             //如果推荐码不存在，那么用户id为空,将会议创建人id设为0
             if (reCode == null) {
-                meeting.setCreateUserId(0);
+                return Response.getInstance(CodeEnum.FAIL, "该推荐码不存在");
             }
             //如果推荐码存在，将会议创建人id设为推荐码人id
             meeting.setCreateUserId(reCode);
-            //执行添加
-            Integer result = meetingService.addMeeting(meeting);
-            if (result == 1) {
-                LOGGER.info("管理员添加会议成功");
-                return Response.getInstance(CodeEnum.SUCCESS);
-            }
-            LOGGER.warn("管理员添加会议失败");
-            return Response.getInstance(CodeEnum.FAIL);
         }
+        //执行添加
+        Integer result = meetingService.addMeeting(meeting);
+        if (result == 1) {
+            LOGGER.info("管理员添加会议成功");
+            return Response.getInstance(CodeEnum.SUCCESS);
+        }
+        LOGGER.warn("管理员添加会议失败");
+        return Response.getInstance(CodeEnum.FAIL);
 
-        return Response.getInstance(CodeEnum.FAIL, checkTimeResult);
     }
 
 

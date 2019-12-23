@@ -37,7 +37,7 @@ public class TokenUtil {
     /**
      * 功能描述: <JWT 生成token>
      * 〈〉
-     * @Param: [userId, userName, userLevel]
+     * @Param: [user]
      * @Return: java.lang.String
      * @Author: luyun
      * @Date: 2019/12/18 11:50
@@ -110,8 +110,7 @@ public class TokenUtil {
         }catch (JWTDecodeException e){
             log.error("Token 值错误！");
             return null;
-        } 
-        Map<String, Object> map = new HashMap<>();
+        }
         int id=jwt.getClaims().get("id").asInt();
         String levelNum=jwt.getClaims().get("levelNum").asString();
         String name=jwt.getClaims().get("name").asString();
