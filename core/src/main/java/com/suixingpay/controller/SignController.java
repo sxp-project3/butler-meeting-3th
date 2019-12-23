@@ -14,7 +14,12 @@ import com.suixingpay.util.HttpUtil;
 import com.suixingpay.util.TokenUtil;
 import com.suixingpay.util.Utils;
 import com.suixingpay.vo.ButlerUserVO;
+import com.suixingpay.vo.SignUpVo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.aspectj.apache.bcel.classfile.Code;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +28,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -252,8 +261,6 @@ public class SignController {
             return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
         }
         meetingMap.put("signUpSum", signUpSum);
-        meetingMap.put("province", meeting.getPlaceProvince());
-        meetingMap.put("city", meeting.getPlaceCity());
 
         //通过会议id查询出当前会议下的所有用户id
         List<Integer> list = signService.selectIdByMeeting(sign);
@@ -284,6 +291,8 @@ public class SignController {
                 ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(sign.getUserId());
 
                 //装结果准备返回
+                map.put("province", butlerUser.getProvince());
+                map.put("city", butlerUser.getCity());
                 map.put("Code", butlerUser.getReferralCode());
                 map.put("userName", butlerUser.getName());
                 map.put("telePhone", butlerUser.getTelephone());
@@ -327,8 +336,6 @@ public class SignController {
             LOGGER.info("不存在的会议");
             return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
         }
-        meetingMap.put("province", meeting.getPlaceProvince());
-        meetingMap.put("city", meeting.getPlaceCity());
         meetingMap.put("signInSum", signInSum);
 
         //通过会议id查询出当前会议下的所有用户id
@@ -353,15 +360,19 @@ public class SignController {
                 String str = sdf.format(sign1.getSigninTime());
                 map.put("SignInTime", str);
                 map.put("IsSignUp", sign1.getIsSignup());
-                if (sign1.getIsSignup() == 1){
+                if (sign1.getIsSignup() == 1 ){
                     String SignUpTime = sdf.format(sign1.getSignupTime());
-                    map.put("IsSignUp", SignUpTime);
+                    map.put("SignUpTime", SignUpTime);
+                }else if (sign1.getIsSignup() == 0){
+                    map.put("SignUpTime", null);
                 }
 
                 //通过用户id查询用户信息
                 ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(sign.getUserId());
 
                 //装结果准备返回
+                map.put("province", butlerUser.getProvince());
+                map.put("city", butlerUser.getCity());
                 map.put("Code", butlerUser.getReferralCode());
                 map.put("userName", butlerUser.getName());
                 map.put("telePhone", butlerUser.getTelephone());
@@ -373,8 +384,208 @@ public class SignController {
         return Response.getInstance(CodeEnum.SUCCESS, meetingMap);
     }
 
+    @RequestMapping(value = "exportSignUpInfo")
+    public void ExportSignUpInfo(@RequestBody Sign sign, HttpServletResponse response) throws IOException {
 
-//    @RequestMapping(value = "/test",method = RequestMethod.POST)
+        LOGGER.info("签到信息接口接收的参数为[{}]", sign.getMeetingId());
+
+        SignUpVo signUpVo = new SignUpVo();
+        //接收前端参数
+        Integer meetingId = sign.getMeetingId();
+
+        //定义一个Map用于装结果
+        List<SignUpVo> list1 = new ArrayList<>();
+
+
+
+        //通过会议id查询会议信息
+        Meeting meeting = meetingKjService.getOne(meetingId);
+
+        //查询出当前会议的签到总人数
+        int signUpSum = signService.selectCountSignIn(meetingId);
+
+//        ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(sign.getUserId());
+
+        //通过用户id查询出报名、签到信息
+//        Sign sign1 = signService.selectWithOutIdAndUserId(sign);
+
+        log.info(meeting.getName()+"签到总人数"+signUpSum);
+        //判断当前会议id是否存在
+
+//        signUpVo.setPlaceProvince(meeting.getPlaceProvince());
+//        signUpVo.setPlaceCity(meeting.getPlaceCity());
+//        signUpVo.setSignUpSum(signUpSum);
+
+        //通过会议id查询出当前会议下的所有用户id
+        List<Integer> list = signService.selectIdByMeeting(sign);
+
+        for (int i = 0;i < list.size();i++){
+
+//            List<SignUpVo> list1 = new ArrayList<>();
+
+            Map<String, Object> map = new HashMap<>();
+            //每一次获取到一个用户id去查询
+            sign.setUserId(list.get(i));
+
+            //通过用户id查询出报名、签到信息
+            Sign sign1 = signService.selectWithOutIdAndUserId(sign);
+
+            //判断已签到，才有签到时间
+            if (sign1.getIsSignup() == 1){
+//                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//                String str = sdf.format(sign1.getSignupTime());
+                signUpVo.setSignupTime(sign1.getSignupTime());
+                signUpVo.setIsSignin(sign1.getIsSignin());
+
+
+                //通过用户id查询用户信息
+                ButlerUser butlerUser = butlerSubordinatesServcie.selectByid(sign.getUserId());
+
+                //装结果准备返回
+                signUpVo.setReferralCode(butlerUser.getReferralCode());
+                signUpVo.setName(butlerUser.getName());
+                signUpVo.setTelephone(butlerUser.getTelephone());
+                signUpVo.setPlaceProvince(butlerUser.getProvince());
+                signUpVo.setPlaceCity(butlerUser.getCity());
+
+                list1.add(signUpVo);
+
+//                HSSFWorkbook wb = new HSSFWorkbook();
+//                HSSFSheet sheet = wb.createSheet("获取会议信息");
+//                HSSFRow row = null;
+//                row = sheet.createRow(0); //创建第一个单元格
+//                row.setHeight((short) (27 * 20));
+//                CellStyle cellStyle = wb.createCellStyle();
+//                row.createCell(0).setCellValue("报名信息"); //为第一行单元格设值
+//                //HSSFCell cell1 = row.createCell(0);
+//                cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+//                //cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);  //居中
+//                //合并单元格  CellRangeAddress(起始行号，终止行号， 起始列号，终止列号）
+//                CellRangeAddress rowRegion = new CellRangeAddress(0, 0, 0, 9);
+//                sheet.addMergedRegion(rowRegion);
+//                //设置表头
+//                row = sheet.createRow(1);
+//                row.setHeight((short) (23 * 20)); //设置行高
+//                row.createCell(0).setCellValue("推荐码"); //为第一个单元格设值
+//                row.createCell(1).setCellValue("手机号"); //为第二个单元格设值
+//                row.createCell(2).setCellValue("姓名");
+//                row.createCell(3).setCellValue("落地省");
+//                row.createCell(4).setCellValue("落地市");
+//                row.createCell(5).setCellValue("报名时间");
+//                row.createCell(6).setCellValue("是否参会签到");
+//
+//
+//                for (int j = 0; j < list1.size(); j++) {
+//                    row = sheet.createRow(j + 2);
+//                    row.createCell(0).setCellValue(signUpVo.getReferralCode());
+//                    row.createCell(1).setCellValue(signUpVo.getTelephone());
+//                    row.createCell(2).setCellValue(signUpVo.getName());
+//                    row.createCell(3).setCellValue(signUpVo.getPlaceProvince());
+//                    row.createCell(4).setCellValue(signUpVo.getPlaceCity());
+////            row.createCell(5).setCellValue(signUpVo.getSignupTime());
+////            row.createCell(6).setCellValue(signUpVo.getIsSignin());
+//
+//
+//
+//                    //   row.createCell(4).setCellValue(meeting.getMeetingStartTime());
+//                    //设置单元格时间格式
+//                    //  CellStyle cellStyle = wb.createCellStyle();
+//                    HSSFCell cell = row.createCell(5);
+//                    HSSFDataFormat format = wb.createDataFormat();
+//                    cellStyle.setDataFormat(format.getFormat("yyyy-MM-dd HH:mm:ss"));
+//                    cell.setCellValue(signUpVo.getSignupTime());
+//                    cell.setCellStyle(cellStyle);
+//
+//                    if (signUpVo.getIsSignin() == 1){
+//                        row.createCell(6).setCellValue("是");
+//                    }else if (signUpVo.getIsSignin() == 0){
+//                        row.createCell(6).setCellValue("否");
+//                    }
+//                }
+//                sheet.setDefaultRowHeight((short) (17 * 20));
+//                //列宽自适应
+//                for (int j = 0; j <= 9; j++) {
+//                    sheet.setColumnWidth(j, 20 * 256);
+//                }
+//
+//                response.setContentType("application/vnd.ms-excel;charset=utf-8");
+//                OutputStream os = response.getOutputStream();
+//                response.setHeader("Content-disposition", "attachment;filename=signUpInfo.xls"); //默认Excel名称
+//                wb.write(os);
+//                os.flush();
+//                os.close();
+
+            }
+        }
+        HSSFWorkbook wb = new HSSFWorkbook();
+        HSSFSheet sheet = wb.createSheet("获取会议信息");
+        HSSFRow row = null;
+        row = sheet.createRow(0); //创建第一个单元格
+        row.setHeight((short) (27 * 20));
+        CellStyle cellStyle = wb.createCellStyle();
+        row.createCell(0).setCellValue("报名信息"); //为第一行单元格设值
+        //HSSFCell cell1 = row.createCell(0);
+        cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+        //cellStyle.setAlignment(HSSFCellStyle.ALIGN_CENTER);  //居中
+        //合并单元格  CellRangeAddress(起始行号，终止行号， 起始列号，终止列号）
+        CellRangeAddress rowRegion = new CellRangeAddress(0, 0, 0, 9);
+        sheet.addMergedRegion(rowRegion);
+        //设置表头
+        row = sheet.createRow(1);
+        row.setHeight((short) (23 * 20)); //设置行高
+        row.createCell(0).setCellValue("推荐码"); //为第一个单元格设值
+        row.createCell(1).setCellValue("手机号"); //为第二个单元格设值
+        row.createCell(2).setCellValue("姓名");
+        row.createCell(3).setCellValue("落地省");
+        row.createCell(4).setCellValue("落地市");
+        row.createCell(5).setCellValue("报名时间");
+        row.createCell(6).setCellValue("是否参会签到");
+
+
+        for (int i = 0; i < list1.size(); i++) {
+            row = sheet.createRow(i + 2);
+            row.createCell(0).setCellValue(signUpVo.getReferralCode());
+            row.createCell(1).setCellValue(signUpVo.getTelephone());
+            row.createCell(2).setCellValue(signUpVo.getName());
+            row.createCell(3).setCellValue(signUpVo.getPlaceProvince());
+            row.createCell(4).setCellValue(signUpVo.getPlaceCity());
+//            row.createCell(5).setCellValue(signUpVo.getSignupTime());
+//            row.createCell(6).setCellValue(signUpVo.getIsSignin());
+
+
+
+            //   row.createCell(4).setCellValue(meeting.getMeetingStartTime());
+            //设置单元格时间格式
+            //  CellStyle cellStyle = wb.createCellStyle();
+            HSSFCell cell = row.createCell(5);
+            HSSFDataFormat format = wb.createDataFormat();
+            cellStyle.setDataFormat(format.getFormat("yyyy-MM-dd HH:mm:ss"));
+            cell.setCellValue(signUpVo.getSignupTime());
+            cell.setCellStyle(cellStyle);
+
+            if (signUpVo.getIsSignin() == 1){
+                row.createCell(6).setCellValue("是");
+            }else if (signUpVo.getIsSignin() == 0){
+                row.createCell(6).setCellValue("否");
+            }
+        }
+        sheet.setDefaultRowHeight((short) (17 * 20));
+        //列宽自适应
+        for (int i = 0; i <= 9; i++) {
+            sheet.setColumnWidth(i, 20 * 256);
+        }
+
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        OutputStream os = response.getOutputStream();
+        response.setHeader("Content-disposition", "attachment;filename=signUpInfo.xls"); //默认Excel名称
+        wb.write(os);
+        os.flush();
+        os.close();
+
+
+    }
+
+    //    @RequestMapping(value = "/test",method = RequestMethod.POST)
 //    public Sign test(){
 //
 //        Sign sign = new Sign();
@@ -396,6 +607,10 @@ public class SignController {
 //
 //        return Response.getInstance(CodeEnum.SUCCESS,"查询成功");
 //
-//    }
+    }
 
-}
+
+
+
+
+
