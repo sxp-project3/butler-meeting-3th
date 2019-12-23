@@ -28,6 +28,10 @@ dependencies {
 //    日志依赖
     compile group: 'org.slf4j', name: 'slf4j-api'
 
+    //通过EXCEL向数据库中导入用户信息
+    compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.14'
+    compile 'org.apache.poi:poi:3.14'
+
 //    fastjson
     compile group: 'com.alibaba', name: 'fastjson', version: '1.2.44'
 
