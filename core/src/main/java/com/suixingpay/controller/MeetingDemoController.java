@@ -11,6 +11,8 @@ import com.suixingpay.service.ButlerSubordinatesServcie;
 import com.suixingpay.service.MeetingKjService;
 import com.suixingpay.service.SignService;
 import com.suixingpay.service.UserService;
+import com.suixingpay.takin.data.domain.PageImpl;
+import com.suixingpay.takin.mybatis.domain.Pagination;
 import com.suixingpay.util.HttpUtil;
 import com.suixingpay.util.TokenUtil;
 import com.suixingpay.vo.ButlerUserVO;
@@ -50,9 +52,11 @@ public class MeetingDemoController {
         Integer userId = userVO.getId();
         Integer pageNum = Integer.parseInt(pageNumString);
         Integer pageSize = Integer.parseInt(pageSizeString);
-        PageHelper.startPage(pageNum, pageSize);
-        List<Meeting> meetings = meetingKjService.getValidMeeting(userId);
-        PageInfo<Meeting> page = new PageInfo<>(meetings);
+        // PageHelper.startPage(pageNum, pageSize);
+        Pagination pagination = new Pagination(0, 2);
+        PageImpl page = meetingKjService.getValidMeeting(userId, pagination);
+        // List<Meeting> meetings = meetingKjService.getValidMeeting(userId);
+        // PageInfo<Meeting> page = new PageInfo<>(meetings);
         Response<Map<String, HashMap>> response = Response.getInstance(CodeEnum.SUCCESS, page);
 
         return response;

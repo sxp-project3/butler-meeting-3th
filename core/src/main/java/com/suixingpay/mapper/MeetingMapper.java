@@ -2,6 +2,7 @@ package com.suixingpay.mapper;
 
 import com.suixingpay.pojo.Meeting;
 import com.suixingpay.query.SearchMeetingParamQuery;
+import com.suixingpay.takin.mybatis.domain.Pagination;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -24,7 +25,11 @@ public interface MeetingMapper {
 
     // 获取我的可报名的会议
     List<Meeting> getListForFrontShow(@Param("nowDate") Date nowDate,
-                                      @Param("createUserIds") List<Integer> createUserIds);
+                                      @Param("createUserIds") List<Integer> createUserIds,
+                                      Pagination pagination);
+
+    Long countlistForFrontShow(@Param("nowDate") Date nowDate,
+                               @Param("createUserIds") List<Integer> createUserIds);
 
 //    @Param("mapParams") HashMap mapParams);
 

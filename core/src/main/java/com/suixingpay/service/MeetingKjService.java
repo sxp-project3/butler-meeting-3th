@@ -2,6 +2,8 @@ package com.suixingpay.service;
 
 import com.suixingpay.pojo.Meeting;
 import com.suixingpay.query.SearchMeetingParamQuery;
+import com.suixingpay.takin.data.domain.PageImpl;
+import com.suixingpay.takin.mybatis.domain.Pagination;
 
 import java.util.List;
 
@@ -11,7 +13,8 @@ import java.util.List;
  */
 
 public interface MeetingKjService {
-    List<Meeting> getValidMeeting(Integer userId);
+    // List<Meeting> getValidMeeting(Integer userId, Pagination pagination);
+    PageImpl getValidMeeting(Integer userId, Pagination pagination);
 
     Meeting getOne(Integer meetingId);
 
