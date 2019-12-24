@@ -53,7 +53,7 @@ public class MeetingDemoController {
         Integer pageNum = Integer.parseInt(pageNumString);
         Integer pageSize = Integer.parseInt(pageSizeString);
         // PageHelper.startPage(pageNum, pageSize);
-        Pagination pagination = new Pagination(0, 2);
+        Pagination pagination = new Pagination((pageNum-1)*pageSize, pageSize);
         PageImpl page = meetingKjService.getValidMeeting(userId, pagination);
         // List<Meeting> meetings = meetingKjService.getValidMeeting(userId);
         // PageInfo<Meeting> page = new PageInfo<>(meetings);
