@@ -47,7 +47,6 @@ public class MeetingDemoController {
                                  @RequestParam(value="pageSize", required = false) String pageSizeString) {
         String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
         ButlerUserVO userVO = userService.parseUser(token);
-        log.info("userID:"+userVO.getId());
         Integer userId = userVO.getId();
         Integer pageNum = Integer.parseInt(pageNumString);
         Integer pageSize = Integer.parseInt(pageSizeString);
@@ -64,8 +63,6 @@ public class MeetingDemoController {
         // 这里尚未完成，需要验证用户身份
         String token = httpUtil.getToken(TokenUtil.TOKEN_NAME);
         ButlerUserVO userVO = userService.parseUser(token);
-        log.info("userID:"+userVO.getId());
-        // Integer userId = 10001; // 模拟用户id
         Integer userId = userVO.getId();
 
         Integer meetingId = Integer.parseInt(meetingIdString);
@@ -77,7 +74,6 @@ public class MeetingDemoController {
         hasSign.setUserId(userId);
         hasSign.setMeetingId(meetingId);
         Sign signResult = signService.selectWithOutIdAndUserId(hasSign);
-        // int hasSignUp = signService.selectWithOutIdAndUserId(signResult.getIsSignup());
         if (signResult == null) {
             result.put("hasSignUp", 0);
         } else {
@@ -100,27 +96,6 @@ public class MeetingDemoController {
         Integer pageSize = Integer.parseInt(pageSizeString);
         PageHelper.startPage(pageNum, pageSize);
         List<Meeting> meetings = meetingKjService.getMyMeetings(userId);
-        PageInfo<Meeting> page = new PageInfo<>(meetings);
-        Response<Map<String, HashMap>> response = Response.getInstance(CodeEnum.SUCCESS, page);
-
-        return response;
-    }
-
-    @RequestMapping(value = "/search-list", method = RequestMethod.POST)
-    public Response searchList(@RequestBody SearchMeetingParamQuery searchMeetingParamQuery) {
-        // 这里尚未完成，需要验证用户身份
-//        Integer userId = 10001; // 模拟用户id
-//
-//        Map<String,Object> params = new HashMap<>();
-//        params.put("createUserId", 10001);
-//        params.put("ifFee", 1);
-//        params.put("place", "北京");
-
-
-//        Integer pageNum = Integer.parseInt(pageNumString);
-//        Integer pageSize = Integer.parseInt(pageSizeString);
-//        PageHelper.startPage(pageNum, pageSize);
-        List<Meeting> meetings = meetingKjService.searchMeeting(searchMeetingParamQuery);
         PageInfo<Meeting> page = new PageInfo<>(meetings);
         Response<Map<String, HashMap>> response = Response.getInstance(CodeEnum.SUCCESS, page);
 

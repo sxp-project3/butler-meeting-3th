@@ -262,8 +262,6 @@ public class SignController {
             return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
         }
         meetingMap.put("signUpSum", signUpSum);
-//        meetingMap.put("province", meeting.getPlaceCity());
-//        meetingMap.put("city", meeting.getPlaceCounty());
 
         //通过会议id查询出当前会议下的所有用户id
         List<Integer> list = signService.selectIdByMeeting(sign);
@@ -339,8 +337,6 @@ public class SignController {
             LOGGER.info("不存在的会议");
             return Response.getInstance(CodeEnum.FAIL,"不存在此会议");
         }
-//        meetingMap.put("province", meeting.getPlaceCity());
-//        meetingMap.put("city", meeting.getPlaceCounty());
         meetingMap.put("signInSum", signInSum);
 
         //通过会议id查询出当前会议下的所有用户id
