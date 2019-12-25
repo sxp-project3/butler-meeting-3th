@@ -224,6 +224,7 @@ public class SignController {
         if (list.contains(userId)) {
             LOGGER.info("已报名的签到");
             signService.updateSignIn(sign);
+
         }
         return Response.getInstance(CodeEnum.SUCCESS, "签到成功");
     }
