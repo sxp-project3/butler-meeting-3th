@@ -4,13 +4,11 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.suixingpay.handler.GlobalExceptionHandler;
 import com.suixingpay.pojo.ButlerUser;
 import com.suixingpay.vo.ButlerUserVO;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import javax.servlet.http.HttpServletRequest;
+
 import java.util.*;
 
 /**

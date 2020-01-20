@@ -14,12 +14,19 @@ import com.suixingpay.service.UserService;
 import com.suixingpay.takin.data.domain.PageImpl;
 import com.suixingpay.takin.mybatis.domain.Pagination;
 import com.suixingpay.util.HttpUtil;
+import com.suixingpay.util.QrcodeUtil;
 import com.suixingpay.util.TokenUtil;
 import com.suixingpay.vo.ButlerUserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.imageio.stream.FileImageInputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,5 +111,33 @@ public class MeetingDemoController {
         Response<Map<String, HashMap>> response = Response.getInstance(CodeEnum.SUCCESS, page);
 
         return response;
+    }
+
+    @RequestMapping(value = "/test")
+    public void test(HttpServletResponse response) {
+        String result = new String();
+        try {
+            result = QrcodeUtil.encode("http://www.baidu.com");
+        } catch (Exception e) {
+            log.info("error");
+        }
+
+        response.setContentType("image/jpeg");
+//        File file = new File(result);       //括号里参数为文件图片路径
+        try {
+            InputStream in = new FileInputStream(result);   //用该文件创建一个输入流
+            OutputStream os = response.getOutputStream();  //创建输出流
+            byte[] b = new byte[1024];
+            while( in.read(b)!= -1){
+                os.write(b);
+            }
+            in.close();
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            log.info("load error");
+        }
+
+        // return result;
     }
 }

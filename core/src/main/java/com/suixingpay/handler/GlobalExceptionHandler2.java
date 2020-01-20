@@ -24,7 +24,7 @@ import java.util.Set;
 @ControllerAdvice
 @ResponseBody
 @Slf4j
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler2 {
     /**
      * 默认异常处理
      *

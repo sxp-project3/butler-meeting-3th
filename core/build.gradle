@@ -13,6 +13,10 @@ repositories {
     maven { url "http://172.16.60.188:8081/nexus/content/groups/public" }
 }
 
+bootRepackage {
+    enabled = true
+}
+
 dependencies {
     //    springboot 依赖
     compile 'org.springframework.boot:spring-boot-starter-web'
@@ -50,4 +54,13 @@ dependencies {
     compile 'com.suixingpay.starter:suixingpay-starter-mybatis-page:3.0.7-SNAPSHOT'
 
     compile 'com.suixingpay.starter:suixingpay-starter-data:3.0.6.RELEASE'
+
+    compile ("com.suixingpay.starter:suixingpay-starter-exception:3.0.6.RELEASE")
+
+    // 二维码使用的包
+    // https://mvnrepository.com/artifact/com.google.zxing/core
+    compile group: 'com.google.zxing', name: 'core', version: '3.3.3'
+    // https://mvnrepository.com/artifact/com.google.zxing/javase
+    compile group: 'com.google.zxing', name: 'javase', version: '3.3.3'
+
 }
